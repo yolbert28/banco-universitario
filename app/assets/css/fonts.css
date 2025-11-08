@@ -1,0 +1,47 @@
+@font-face {
+  font-family: 'Montserrat Alternates'; /* Nombre que usarás en tu CSS */
+  src: url('../fonts/MontserratAlternates-Regular.ttf') format('truetype');
+  font-weight: normal; /* Peso de la fuente (ej. 400 para 'normal') */
+  font-style: normal; /* Estilo de la fuente */
+  font-display: swap; /* Importante para el rendimiento: cómo se carga la fuente */
+}
+
+@font-face {
+  font-family: 'Montserrat Alternates'; /* Nombre que usarás en tu CSS */
+  src: url('../fonts/MontserratAlternates-Bold.ttf') format('truetype');
+  font-weight: bold; /* Peso de la fuente (ej. 400 para 'normal') */
+  font-style: normal; /* Estilo de la fuente */
+  font-display: swap; /* Importante para el rendimiento: cómo se carga la fuente */
+}
+
+@font-face {
+  font-family: 'Montserrat Alternates'; /* Nombre que usarás en tu CSS */
+  src: url('../fonts/MontserratAlternates-BoldItalic.ttf') format('truetype');
+  font-weight: bold; /* Peso de la fuente (ej. 400 para 'normal') */
+  font-style: italic; /* Estilo de la fuente */
+  font-display: swap; /* Importante para el rendimiento: cómo se carga la fuente */
+}
+
+@font-face {
+  font-family: 'Montserrat Alternates'; /* Nombre que usarás en tu CSS */
+  src: url('../fonts/MontserratAlternates-Italic.ttf') format('truetype');
+  font-weight: normal; /* Peso de la fuente (ej. 400 para 'normal') */
+  font-style: italic; /* Estilo de la fuente */
+  font-display: swap; /* Importante para el rendimiento: cómo se carga la fuente */
+}
+
+@font-face {
+  font-family: 'Montserrat Alternates'; /* Nombre que usarás en tu CSS */
+  src: url('../fonts/MontserratAlternates-Thin.ttf') format('truetype');
+  font-weight: 100; /* Peso de la fuente (ej. 400 para 'normal') */
+  font-style: normal; /* Estilo de la fuente */
+  font-display: swap; /* Importante para el rendimiento: cómo se carga la fuente */
+}
+
+@font-face {
+  font-family: 'Montserrat Alternates'; /* Nombre que usarás en tu CSS */
+  src: url('../fonts/MontserratAlternates-ThinItalic.ttf') format('truetype');
+  font-weight: 100; /* Peso de la fuente (ej. 400 para 'normal') */
+  font-style: italic; /* Estilo de la fuente */
+  font-display: swap; /* Importante para el rendimiento: cómo se carga la fuente */
+}
