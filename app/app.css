@@ -4,3 +4,21 @@
 *{
   font-family: "Montserrat Alternates";
 }
+
+@theme {
+  --color-primary: #085F63;
+  --color-secondary: #49BEB7;
+  --color-tertiary: #C7FFFA;
+  --color-bg-green: #00373D;
+  --color-bg-light-blue: #E5FFFD;
+  --color-accent: #F2A154;
+  --color-dark-accent: #D97517;
+  --color-accent-opacity: #F2A15466;
+  --color-dark-accent-opacity: #D9751780;
+  --color-red: #F71C1C;
+  --color-dark-red: #720606;
+  --color-dirty-white: #F1F1F1;
+  --color-green: #094F03;
+  --color-green-dye: #00373DB5;
+  --color-dark-green-dye: #00373DB5;
+}
