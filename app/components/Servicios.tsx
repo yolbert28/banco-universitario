@@ -15,12 +15,12 @@ interface servicioProps{
 
 export function Servicios({servicioList}:servicioProps) {
   return (
-    <section className="bg-white py-20 bg-gray-50 overflow-hidden">
+    <section className="bg-white py-20 overflow-hidden">
       <div className="container mx-auto px-6">
         
         
         <div >
-          <h2 className="text-7xl font-bold ">Servicios</h2>
+          <h2 className="text-7xl font-bold px-[200px] py-[60px]">Servicios</h2>
         </div>
 
         

@@ -23,10 +23,10 @@ export function ServicioCard({title,description,imagName,align,}: ServiceCardPro
     >
       <div
         
-        className={`flex ${flexDirection}  items-center bg-white rounded-2xl shadow-lg overflow-hidden min-h-[494px]`}
+        className={`flex ${flexDirection}  items-center bg-white rounded-3xl shadow-2xl border border-gray-300 overflow-hidden min-h-[494px]`}
       >
       
-        <div className="  w-390px h-400px flex-shrink-0 p-[70px]">
+        <div className="w-390px h-400px shrink-0 p-[70px]">
         <img
           src={imagPath}
           alt={title}
