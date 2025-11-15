@@ -2,6 +2,7 @@
 import TopBar from "~/components/TopBar";
 import { Presentacion } from "~/components/Inicio";
 import { Servicios} from "~/components/Servicios";
+import Contactos from "~/components/Contactos";
 
 const servicioData = [
   {
@@ -44,7 +45,7 @@ export default function Home() {
       <TopBar/>
       <Presentacion/>
       <Servicios servicioList={servicioData}/>
-
+      <Contactos/>
 
     </main>
   );
