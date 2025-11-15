@@ -20,7 +20,7 @@ export function Servicios({servicioList}:servicioProps) {
         
         
         <div >
-          <h2 className="text-7xl font-bold ">Servicios</h2>
+          <h2 className="text-7xl font-bold px-[200px] py-[60px]">Servicios</h2>
         </div>
 
         
