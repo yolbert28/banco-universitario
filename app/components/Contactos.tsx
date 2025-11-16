@@ -5,7 +5,7 @@ import SocialCard from "./SocialCard";
 export default function Contacto() {
   return (
     <section className="w-screen bg-bg-green flex justify-center items-center pt-8 relative">
-      <div className="absolute -top-20 w-screen grid items-center h-24" style={{gridTemplateColumns: '1fr auto 1fr'}}>
+      <div className="absolute -top-[6.5vw] sm:-top-[4.5vw] xl:-top-20 w-screen grid items-center h-8 lg:h-16 xl:h-20" style={{gridTemplateColumns: '1fr auto 1fr'}}>
         <div className="h-full w-full"/>
         <img
           className="h-full rotate-180 justify-self-center"
@@ -15,7 +15,7 @@ export default function Contacto() {
         <div className="h-full w-full bg-bg-green"/>
       </div>
 
-      <div className="max-w-[1650px] w-full bg-bg-green z-50 h-full flex flex-col justify-center items-center gap-12 mt-24">
+      <div className="max-w-[1650px] w-full bg-bg-green z-50 h-full flex flex-col justify-center items-center gap-12 xl:mt-24">
         <ContactoCard>
           <div className="flex flex-col w-full h-full justify-center">
             <h1 className="font-bold text-dirty-white text-4xl lg:text-4xl xl:text-4xl">
