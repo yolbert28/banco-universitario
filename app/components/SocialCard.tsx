@@ -6,13 +6,13 @@ interface SocialCardProps {
 
 export default function SocialCard({ logo, href, text }: SocialCardProps) {
   return (
-    <div className="flex flex-col max-w-[660px]">
-      <div className="flex flex-row items-center">
-        <img className="w-12 h-12 m-5" src={logo} alt="" />
-        <strong className="font-bold text-xl text-dirty-white">{text}</strong>
-        <a style={{ marginLeft: "auto" }} href={href}>
+    <div className="flex flex-col xl:max-w-[660px]">
+      <div className="grid items-center" style={{gridTemplateColumns: "60px auto 60px"}}>
+        <img className="lg:w-12 lg:h-12 justify-self-center w-10 h-10 m-5" src={logo} alt="" />
+        <strong className="font-bold text-xl wrap-break-word leading-tight text-dirty-white">{text}</strong>
+        <a style={{ marginLeft: "auto", marginRight: 20}} href={href}>
           <img
-            className="w-8 h-8 m-5"
+            className="lg:w-8 lg:h-8 w-6 h-6 m-5"
             src="images/redirection_arrow.png"
             alt=""
           />

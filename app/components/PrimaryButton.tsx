@@ -11,8 +11,7 @@ export default function PrimaryButton({
 }: PrimaryButtonProps) {
   return (
     <button
-      className="bg-accent active:bg-dark-accent font-bold text-xl text-primary py-4 w-min rounded-md whitespace-nowrap px-[px}]"
-      style={{ paddingLeft: px, paddingRight: px }}
+      className="bg-accent active:bg-dark-accent font-bold text-lg md:text-lg lg:text-xl xl:text-xl text-primary py-4 w-full lg:w-min xl:w-min rounded-md whitespace-nowrap xl:px-20 lg:px-16 md:px-16"
       onClick={onClick}
     >
       {text}
