@@ -40,7 +40,7 @@ const servicioData = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen w-screen flex flex-col justify-center items-center bg-white">
 
       <TopBar/>
       <Presentacion/>

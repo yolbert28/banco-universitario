@@ -15,7 +15,7 @@ export default function Contacto() {
         <div className="h-full w-full bg-bg-green"/>
       </div>
 
-      <div className="max-w-[1650px] w-full bg-bg-green z-50 h-full flex flex-col justify-center items-center gap-12 xl:mt-24">
+      <div className="max-w-[1650px] w-full bg-bg-green z-50 h-full flex flex-col justify-center items-center gap-12  md:mt-8 xl:mt-24">
         <ContactoCard>
           <div className="flex flex-col w-full h-full justify-center">
             <h1 className="font-bold text-dirty-white text-4xl lg:text-4xl xl:text-4xl">
