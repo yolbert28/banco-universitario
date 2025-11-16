@@ -1,6 +1,4 @@
-
 import { ServicioCard } from "./ServicioCar";
-
 
 interface Service{
   title: string;
@@ -15,16 +13,18 @@ interface servicioProps{
 
 export function Servicios({servicioList}:servicioProps) {
   return (
-    <section className="bg-white py-20 overflow-hidden">
-      <div className="container mx-auto px-6">
+    <section className=" w-screen overflow-hidden pb-[100px]">
+      <div className="container mx-auto px-4 sm:px-6">
         
         
-        <div >
-          <h2 className="text-7xl font-bold px-[200px] py-[60px]">Servicios</h2>
+        <div className="text-center md:text-left mb-10 md:mb-16">
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold px-0 md:px-8 lg:px-[200px] py-8 md:py-8 lg:py-[60px] text-primary-dark">
+            Servicios
+          </h2>
         </div>
 
         
-        <div className="bg-white p-6 md:p-12  -mt-1 z-0 relative">
+        <div className="bg-white p-1 md:p-6 lg:p-12 z-0 relative">
           {servicioList.map((service, index) => (
             <ServicioCard
               key={index}
