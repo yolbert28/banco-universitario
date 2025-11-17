@@ -5,11 +5,11 @@
   font-family: "Montserrat Alternates";
 }
 
-@theme {
+@theme theme {
   --color-primary: #085F63;
   --color-secondary: #49BEB7;
   --color-tertiary: #C7FFFA;
-  --color-bg-green: #00373D;
+  --color-bg-green: #00373D;/*letras*/
   --color-bg-light-blue: #E5FFFD;
   --color-accent: #F2A154;
   --color-dark-accent: #D97517;
