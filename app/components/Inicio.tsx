@@ -1,25 +1,26 @@
 export function Presentacion() {
-  
+
 
   return (
     <section
-      className=" w-screen relative w-full h-[760px] sm:h-[700px] lg:h-[750px] bg-cover bg-[16%_center] bg-[url('/images/inicio.webp')] scale-x-[-1]"
-      
+      className=" w-screen flex flex-col items-center h-[680px] md:h-[760px] sm:h-[700px] lg:h-[750px]"
     >
-      
-      <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/40 to-transparent md:bg-gradient-to-r md:from-black/90 md:via-black/40 md:to-transparent scale-x-[-1]"></div>
+      <div className="max-w-[1650px] w-full h-full relative bg-cover max-[450px]:bg-position-[-20vw_center] max-[540px]:bg-position-[-10vw_center] sm:bg-position-[-0vw_center] md:bg-position-[0vw_bottom] bg-[url('/images/inicio.webp')] scale-x-[-1]">
+        <div className="absolute right-0 h-[55%] bg-linear-to-b w-full from-black/80 via-black/50 via-90% lg:via-75% to-transparent lg:w-[70%] lg:h-full lg:bg-linear-to-l lg:to-80%"></div>
 
-      
-      <div className="relative z-10 max-w-[1650px] w-full mx-auto h-full flex flex-col justify-start md:justify-start items-center md:items-start px-6 pt-24 pb-16 md:pb-0 md:pt-16 text-white scale-x-[-1] text-center md:text-left">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl text-dirty-white font-bold mb-4 shadow-lg leading-tight drop-shadow-md">
-          Banco Universitario
-        </h1>
-        <p className="text-lg md:text-xl lg:text-2xl max-w-md md:max-w-lg shadow-md text-dirty-white leading-relaxed drop-shadow-sm">
-          Somos una confiable institución financiera comprometida con los estudiantes universitarios, brindando 
-          soluciones financieras ágiles y eficientes. Nuestra misión es facilitar la gestión de sus recursos y 
-          contribuir al crecimiento económico y personal de nuestros clientes.
-        </p>
+        <div className="relative z-10 w-full mx-auto h-full flex flex-col justify-start items-start px-6 lg:px-20 pt-8 pb-16 lg:pb-0 lg:pt-24 text-white scale-x-[-1] text-left">
+          <h1 className="text-4xl lg:w-96 md:text-5xl w-64 lg:text-6xl text-dirty-white font-bold mb-4 shadow-lg leading-tight drop-shadow-md">
+            Banco Universitario
+          </h1>
+          <p className="text-lg md:text-xl lg:text-2xl max-w-md md:max-w-lg shadow-md text-dirty-white leading-tight drop-shadow-sm">
+            Somos una confiable institución financiera comprometida con los estudiantes universitarios, brindando
+            soluciones financieras ágiles y eficientes. Nuestra misión es facilitar la gestión de sus recursos y
+            contribuir al crecimiento económico y personal de nuestros clientes.
+          </p>
+        </div>
       </div>
+
+
     </section>
   );
 }
