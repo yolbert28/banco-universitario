@@ -1,13 +1,23 @@
+import PrimaryButton from "./PrimaryButton";
+
 export default function TopBar() {
   return (
-    <div className="grid w-screen" style={{gridTemplateColumns: "1fr auto 1fr"}} >
-      <div className=" bg-tertiary"/>
-      <div className="grid grid-cols-2 w-full shrink bg-primary max-w-[1650px]">
-        <div className="bg-tertiary">
-          <img className="w-[400px]" src="/images/logo.png" alt="" />
+    <div className="grid w-screen h-28" style={{ gridTemplateColumns: "1fr auto 1fr" }} >
+      <div className="bg-tertiary" />
+      <div className="grid grid-cols-2 w-screen shrink bg-primary max-w-[1650px]">
+        <div className=" grid grid-rows-1 relative overflow-hidden">
+          <div className="flex flex-row items-center lg:bg-tertiary">
+            <img className="mx-[2.5vw] w-[380px] lg:block hidden" src="/images/logo.png" alt="" />
+            <img className="mx-[2.5vw] w-20 block lg:hidden" src="/favicon.webp" alt="" />
+          </div>
+          <div className="bg-primary -top-40 right-12 w-2.5 h-96 absolute rotate-45" />
+          <div className="bg-primary -top-40 -right-[120px] w-32 h-96 absolute rotate-45"/>
+        </div>
+        <div className="w-full lg:flex flex-row justify-end py-5 px-[2.5vw] hidden">
+          <PrimaryButton text="En linea" px={130} />
         </div>
       </div>
-      <div className="w-full h-full bg-primary"/>
+      <div className="bg-primary" />
     </div>
 
   )
