@@ -4,18 +4,17 @@ import Mision from "~/components/Mision";
 import Objetivo from "~/components/Objetivo";
 import TopBar from "~/components/TopBar";
 import Vision from "~/components/Vision";
+import aboutData from "../data/about.json";
 
-export default function About(){
+export default function About() {
   return (
     <main className="min-h-screen w-screen flex flex-col justify-center items-center bg-white">
-    
-          <TopBar/>
-          <InicioNosotros/>
-          <Mision/>
-          <Vision/>
-          <Objetivo/>
-          <Contactos/>
-    
+      <TopBar />
+      <InicioNosotros title={aboutData.title} />
+      <Mision data={aboutData.mission} />
+      <Vision data={aboutData.vision} />
+      <Objetivo data={aboutData.objective}/>
+      <Contactos data={aboutData.Contactos} />
     </main>
-  )
+  );
 }

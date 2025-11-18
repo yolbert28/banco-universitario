@@ -1,4 +1,10 @@
-export default function Mision() {
+interface MisionProps {
+  title: string;
+  description: string;
+}
+
+
+export default function Mision({data}: {data: MisionProps}) {
   return (
     <div
       className="w-screen flex flex-col justify-center items-center bg-tertiary relative"
@@ -33,14 +39,9 @@ export default function Mision() {
           </div>
 
           <div className="w-full flex flex-col justify-center items-center md:items-start text-left md:gap-4 pt-2">
-            <h3 className=" text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-bg-green">Misión</h3>
+            <h3 className=" text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-bg-green">{data.title}</h3>
             <p className="text-base text-center md:text-left leading-tight lg:text-xl xl:text-2xl text-bg-green mb-6">
-              {" "}
-              Somos una confiable institución financiera comprometida con los
-              estudiantes universitarios, brindando soluciones financieras
-              ágiles y eficientes. Nuestra misión es facilitar la gestión de sus
-              recursos y contribuir al crecimiento económico y personal de
-              nuestros clientes.
+              {data.description}
             </p>
           </div>
         </div>

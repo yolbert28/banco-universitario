@@ -8,10 +8,11 @@ interface Service{
 }
 
 interface servicioProps{
+  title?: String;
   servicioList: Service[]
 }
 
-export function Servicios({servicioList}:servicioProps) {
+export function Servicios({title,servicioList}:servicioProps) {
   return (
     <section className=" w-screen flex flex-col items-center pb-16 md:pb-[100px] xl:pb-[200px] relative">
 
@@ -26,7 +27,7 @@ export function Servicios({servicioList}:servicioProps) {
       <div className="container max-w-[1650px] w-full flex z-50 flex-col items-center justify-center sm:px-6">
         <div className="text-center md:text-left mb-10 md:mb-16">
           <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold px-0 md:px-8 lg:px-[200px] py-8 md:py-8 lg:py-[60px] text-primary-dark">
-            Servicios
+            {title}
           </h2>
         </div>
 

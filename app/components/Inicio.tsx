@@ -1,5 +1,9 @@
-export function Presentacion() {
+interface PresentacionProps {
+  title: string;
+  description: string;
+}
 
+export function Presentacion({title, description}: PresentacionProps) {
 
   return (
     <section
@@ -10,12 +14,10 @@ export function Presentacion() {
 
         <div className="relative z-10 w-full mx-auto h-full flex flex-col justify-start items-start px-6 lg:px-20 pt-8 pb-16 lg:pb-0 lg:pt-24 text-white scale-x-[-1] text-left">
           <h1 className="text-4xl lg:w-96 md:text-5xl w-64 lg:text-6xl text-dirty-white font-bold mb-4 shadow-lg leading-tight drop-shadow-md">
-            Banco Universitario
+            {title}
           </h1>
           <p className="text-lg md:text-xl lg:text-2xl max-w-md md:max-w-lg shadow-md text-dirty-white leading-tight drop-shadow-sm">
-            Somos una confiable institución financiera comprometida con los estudiantes universitarios, brindando
-            soluciones financieras ágiles y eficientes. Nuestra misión es facilitar la gestión de sus recursos y
-            contribuir al crecimiento económico y personal de nuestros clientes.
+            {description}
           </p>
         </div>
       </div>

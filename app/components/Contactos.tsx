@@ -1,9 +1,36 @@
-import { redirect, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import ContactoCard from "./ContactoCard";
 import PrimaryButton from "./PrimaryButton";
 import SocialCard from "./SocialCard";
 
-export default function Contacto() {
+interface ContactoData {
+  firstCard: {
+    title: string;
+    description: string;
+    image: string;
+    url: String;
+    button: string;
+  };
+  secondCard: {
+    title: string;
+    direction: string;
+    phone: string;
+    fax: string;
+    email: string;
+    button: string;
+  };
+  CornerInfo: {
+    logo: string;
+    title: string;
+    rif: string;
+  };
+}
+
+interface ContactoProps {
+  data: ContactoData;
+}
+
+export default function Contacto({ data }: ContactoProps) {
   let navigate = useNavigate();
 
   return (
@@ -25,61 +52,60 @@ export default function Contacto() {
         <ContactoCard>
           <div className="flex flex-col w-full h-full justify-center">
             <h1 className="font-bold text-dirty-white text-4xl lg:text-4xl xl:text-4xl">
-              ¿Quienes somos?
+              {data.firstCard.title}
             </h1>
             <p className="text-dirty-white leading-tight text-lg lg:text-xl xl:text-xl py-5 lg:py-10 xl:py-10">
-              {" "}
-              Somos una confiable institución financiera comprometida con los
-              estudiantes universitarios, brindando soluciones financieras
-              ágiles y eficientes. Nuestra misión es facilitar la gestión de sus
-              recursos y contribuir al crecimiento económico y personal de
-              nuestros clientes.
+              {data.firstCard.description}
             </p>
             <PrimaryButton
-              text="Acerca de nosotros"
+              text={data.firstCard.button}
               onClick={() => {
-                navigate("/about");
+                navigate(`${data.firstCard.url}`);
               }}
             />
           </div>
           <img
             className="rounded-2xl w-full lg:w-[50%] xl:w-[50%]"
-            src="/images/quienes_somos.webp"
+            src={data.firstCard.image}
             alt=""
           />
         </ContactoCard>
         <ContactoCard reverse>
           <div className="flex flex-col w-full h-full justify-center">
-            <h1 className="font-bold text-dirty-white text-4xl">Contactos</h1>
+            <h1 className="font-bold text-dirty-white text-4xl">
+              {data.secondCard.title}
+            </h1>
             <div className="text-dirty-white leading-tight sm:w-[90%] text-lg lg:text-xl xl:text-xl py-5 lg:py-10 xl:py-10  flex flex-col gap-4">
               <p>
-                <strong>Dirección:</strong> Av. Universidad, Edificio Banco
-                Universitario, piso 12, Caracas, Venezuela.
+                <strong>Dirección:</strong> {data.secondCard.direction}
               </p>
               <p>
-                <strong>Teléfono:</strong> +58 212-555-5555
+                <strong>Teléfono:</strong> {data.secondCard.phone}
               </p>
               <p>
-                <strong>Fax:</strong> +58 212-555-5556
+                <strong>Fax:</strong> {data.secondCard.fax}
               </p>
               <p className="wrap-break-word">
-                <strong>Correo electrónico:</strong>{" "}
-                info@bancouniversitario.com.ve
+                <strong>Correo electrónico:</strong> {data.secondCard.email}
               </p>
             </div>
             <PrimaryButton
-              text="Ir al mapa"
+              text={data.secondCard.button}
               onClick={() => console.log("Hola")}
             />
           </div>
           <img
             className="rounded-2xl w-full lg:w-[50%] xl:w-[50%]"
-            src="/images/quienes_somos.webp"
+            src={data.firstCard.image}
             alt=""
           />
         </ContactoCard>
         <div className="flex flex-col-reverse gap-16 lg:flex-row  w-[90%] py-20">
-          {LogoFooter()}
+          <LogoFooter
+            logo={data.CornerInfo.logo}
+            title={data.CornerInfo.title}
+            rif={data.CornerInfo.rif}
+          />
           <div className="flex flex-col shrink w-full">
             <SocialCard
               logo="/images/facebook_logo.png"
@@ -103,19 +129,24 @@ export default function Contacto() {
   );
 }
 
-function LogoFooter() {
+interface LogoFooterProps {
+  logo: string;
+  title: string;
+  rif: string;
+}
+
+function LogoFooter({ logo, title, rif }: LogoFooterProps) {
   return (
-    <div className="w-full h-full shrink flex justify-start items-end">
+    <div className="w-full h-full shrink mt-auto flex justify-start items-end">
       <div className="flex flex-col gap-2 text-dirty-white">
         <div className="flex flex-row items-center gap-2">
-          <img className="w-[70px] h-[70px]" src="/favicon.webp" alt="" />
+          <img className="w-[70px] h-[70px]" src={logo} alt={`${title} logo`} />
           <h2 className="font-bold text-[24px] leading-tight max-w-36">
-            Banco Universitario
+            {title}
           </h2>
         </div>
         <p className="text-[16px] font-bold max-w-96 text-bg-light-blue">
-          Banco universitario-RIF: G-70054489-7 Copyright © 2025. Todos los
-          derechos reservados
+          {rif}
         </p>
       </div>
     </div>

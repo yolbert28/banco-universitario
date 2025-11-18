@@ -1,0 +1,56 @@
+{
+  "title": "Banco Universitario",
+  "mission": {
+    "title": "Misión",
+    "description": "Somos una confiable institución financiera comprometida con los estudiantes universitarios, brindando soluciones financieras ágiles y eficientes. Nuestra misión es facilitar la gestión de sus recursos y contribuir al crecimiento económico y personal de nuestros clientes."
+  },
+  "vision": {
+    "title": "Visión",
+    "description": "Queremos ser la principal opción financiera para estudiantes universitarios en el país. Deseamos ser reconocidos por nuestros servicios innovadores, la calidad de atención al cliente y nuestro compromiso con la educación y el desarrollo social."
+  },
+  "objective": {
+    "title": "Objetivo",
+    "objectives": [
+      {
+        "description": "Fomentar el uso de nuestras plataformas digitales para hacer transferencias entre estudiantes sin comisión, depósitos y retiros en efectivo, ofreciendo herramientas tecnológicas fáciles y seguras."
+      },
+      {
+        "description": "Brindar a los estudiantes universitarios un servicio eficiente y de calidad en la gestión de sus recursos financieros, a través de nuestros canales digitales y nuestros puntos de atención presencial."
+      },
+      {
+        "description": "Promover la educación financiera de los estudiantes universitarios, a través de charlas, talleres y capacitaciones sobre temas como el ahorro, la inversión y el uso responsable del crédito."
+      },
+      {
+        "description": "Mantener una cultura de innovación y mejora continua en nuestros procesos, productos y servicios, para estar siempre a la vanguardia de las necesidades de nuestros clientes y del mercado."
+      },
+      {
+        "description": "Establecer alianzas estratégicas con universidades y empresas para ofrecer beneficios exclusivos a nuestros clientes, tales como descuentos en matrículas, becas, prácticas laborales, entre otros."
+      },
+      {
+        "description": "Brindar a los estudiantes universitarios un servicio eficiente y de calidad en la gestión de sus recursos financieros, a través de nuestros canales digitales y nuestros puntos de atención presencial."
+      }
+    ]
+  },
+  "Contactos": {
+    "firstCard": {
+      "title": "¿Quienes somos?",
+      "description": "Somos una confiable institución financiera comprometida con los estudiantes universitarios, brindando soluciones financieras ágiles y eficientes. Nuestra misión es facilitar la gestión de sus recursos y contribuir al crecimiento económico y personal de nuestros clientes.",
+      "image": "/images/quienes_somos.webp",
+      "url": "/",
+      "button": "Ir al inicio"
+    },
+    "secondCard": {
+      "title": "Contactos",
+      "direction": "Av. Universidad, Edificio Banco Universitario, piso 12, Caracas, Venezuela.",
+      "phone": "+58 212-555-5555",
+      "fax": "+58 212-555-5556",
+      "email": "info@bancouniversitario.com.ve",
+      "button": "Ir al mapa"
+    },
+    "CornerInfo": {
+      "logo": "favicon.webp",
+      "title": "Banco Universitario",
+      "rif": "Banco universitario-RIF: G-70054489-7 Copyright © 2025. Todos los derechos reservados"
+    }
+  }
+}
