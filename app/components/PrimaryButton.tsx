@@ -9,8 +9,6 @@ export default function PrimaryButton({
   px = 50,
   onClick,
 }: PrimaryButtonProps) {
-  
-  const paddingX = px;
 
   return (
     <button
