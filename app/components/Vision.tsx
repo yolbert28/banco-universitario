@@ -18,7 +18,7 @@ export default function Vision() {
           </div>
 
           <div className="w-full flex flex-col justify-center items-center md:items-start text-left md:gap-4 pt-2">
-            <h3 className=" text-3xl md:text-5xl lg:text-6xl font-bold mb-4 text-bg-green">Visión</h3>
+            <h3 className=" text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-bg-green">Visión</h3>
             <p className="text-base text-center md:text-left leading-tight lg:text-xl xl:text-2xl text-bg-green mb-6">
               {" "}
               Queremos ser la principal opción financiera para estudiantes

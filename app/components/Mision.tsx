@@ -14,10 +14,10 @@ export default function Mision() {
           src="/images/decorador_cian_claro.webp"
           alt=""
         />
-        <div className="h-full w-full bg-bg-green" />
+        <div className="h-full w-full bg-tertiary" />
       </div>
 
-      <div className="w-full flex flex-col justify-center items-center max-w-[1650px]">
+      <div className="w-full flex flex-col justify-center items-center max-w-[1650px] z-20">
         <div className="flex flex-col-reverse lg:flex-row items-start md:gap-6 lg:gap-16 py-12 md:py-16 w-[90%]">
           <div className="lg:order-0 w-full shrink flex justify-center items-center">
             <img
@@ -33,7 +33,7 @@ export default function Mision() {
           </div>
 
           <div className="w-full flex flex-col justify-center items-center md:items-start text-left md:gap-4 pt-2">
-            <h3 className=" text-3xl md:text-5xl lg:text-6xl font-bold mb-4 text-bg-green">Misión</h3>
+            <h3 className=" text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-bg-green">Misión</h3>
             <p className="text-base text-center md:text-left leading-tight lg:text-xl xl:text-2xl text-bg-green mb-6">
               {" "}
               Somos una confiable institución financiera comprometida con los

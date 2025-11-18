@@ -1,5 +1,3 @@
-import PrimaryButton from "./PrimaryButton";
-
 interface ContactoCardProps {
   reverse?: boolean;
   children?: React.ReactNode;

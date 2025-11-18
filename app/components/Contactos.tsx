@@ -1,18 +1,24 @@
+import { redirect, useNavigate } from "react-router";
 import ContactoCard from "./ContactoCard";
 import PrimaryButton from "./PrimaryButton";
 import SocialCard from "./SocialCard";
 
 export default function Contacto() {
+  let navigate = useNavigate();
+
   return (
     <section className="w-screen bg-bg-green flex justify-center items-center pt-8 relative">
-      <div className="absolute -top-[6.5vw] sm:-top-[4.5vw] xl:-top-20 w-screen grid items-center h-8 lg:h-16 xl:h-20" style={{gridTemplateColumns: '1fr auto 1fr'}}>
-        <div className="h-full w-full"/>
+      <div
+        className="absolute -top-[6.5vw] sm:-top-[4.5vw] xl:-top-20 w-screen grid items-center h-8 lg:h-16 xl:h-20"
+        style={{ gridTemplateColumns: "1fr auto 1fr" }}
+      >
+        <div className="h-full w-full" />
         <img
           className="h-full rotate-180 justify-self-center"
           src="/images/decorador_verde_oscuro.png"
           alt=""
         />
-        <div className="h-full w-full bg-bg-green"/>
+        <div className="h-full w-full bg-bg-green" />
       </div>
 
       <div className="max-w-[1650px] w-full bg-bg-green z-50 h-full flex flex-col justify-center items-center gap-12  md:mt-8 xl:mt-24">
@@ -31,7 +37,9 @@ export default function Contacto() {
             </p>
             <PrimaryButton
               text="Acerca de nosotros"
-              onClick={() => console.log("Hola")}
+              onClick={() => {
+                navigate("/about");
+              }}
             />
           </div>
           <img
