@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { redirect, useNavigate } from "react-router";
 import ContactoCard from "./ContactoCard";
 import PrimaryButton from "./PrimaryButton";
 import SocialCard from "./SocialCard";
@@ -17,6 +17,8 @@ interface ContactoData {
     phone: string;
     fax: string;
     email: string;
+    mapUrl: string;
+    url: String;
     button: string;
   };
   CornerInfo: {
@@ -90,15 +92,22 @@ export default function Contacto({ data }: ContactoProps) {
               </p>
             </div>
             <PrimaryButton
+              px={85}
               text={data.secondCard.button}
-              onClick={() => console.log("Hola")}
+              onClick={() => {
+                window.open(`${data.secondCard.url}`, "_blank", "noopener,noreferrer");
+              }}
             />
           </div>
-          <img
-            className="rounded-2xl w-full lg:w-[50%] xl:w-[50%]"
-            src={data.firstCard.image}
-            alt=""
-          />
+          <iframe
+            className="rounded-2xl lg:min-w-[450px] xl:min-w-[600px] min-h-[300px] lg:w-[50%] xl:w-[50%]"
+            src={data.secondCard.mapUrl}
+            style={{ border: 0 }}
+            allowFullScreen={true}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title={`Mapa de ubicación de ${data.CornerInfo.title}`}
+          ></iframe>
         </ContactoCard>
         <div className="flex flex-col-reverse gap-16 lg:flex-row  w-[90%] py-20">
           <LogoFooter
