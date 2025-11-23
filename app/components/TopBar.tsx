@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import PrimaryButton from "./PrimaryButton";
+import { ROUTES } from "~/constans";
 
 export default function TopBar() {
 
@@ -18,7 +19,7 @@ export default function TopBar() {
           <div className="bg-primary -top-40 -right-[120px] w-32 h-96 absolute rotate-45"/>
         </div>
         <div className="w-full lg:flex flex-row justify-end py-5 px-[2.5vw] hidden">
-          <PrimaryButton text="En linea" px={130} />
+          <PrimaryButton text="En linea" px={130} onClick={() => navigate(ROUTES.BL_HOME)} />
         </div>
       </div>
       <div className="bg-primary" />

@@ -11,6 +11,7 @@
   --color-tertiary: #C7FFFA;
   --color-bg-green: #00373D;/*letras*/
   --color-bg-light-blue: #E5FFFD;
+  --color-light-blue: #E5FFFD;
   --color-accent: #F2A154;
   --color-dark-accent: #D97517;
   --color-accent-opacity: #F2A15466;
@@ -21,4 +22,5 @@
   --color-green: #094F03;
   --color-green-dye: #00373DB5;
   --color-dark-green-dye: #00373DB5;
+  --color-sideBar-button-hover: #49BEB74D;
 }
