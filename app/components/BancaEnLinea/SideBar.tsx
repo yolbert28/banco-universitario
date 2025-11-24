@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { useNavigate, type NavigateFunction } from "react-router";
 import SideBarButton from "./SideBarButton";
 import { ROUTES } from "~/constans";
 
@@ -12,8 +12,8 @@ export default function SideBar({ splat }: SideBarProps) {
   console.log(splat);
 
   return (
-    <div className="bg-bg-green w-80 flex flex-col h-full">
-      {Logo()}
+    <div className="bg-bg-green w-64 flex flex-col h-full">
+      {Logo(navigate)}
       <SideBarButton
         text="Inicio"
         selected={splat === ""}
@@ -42,12 +42,13 @@ export default function SideBar({ splat }: SideBarProps) {
     </div>
   );
 
-  function Logo() {
+  function Logo(navigate: NavigateFunction) {
     return (
-      <div className="h-28 w-full flex justify-center items-center bg-tertiary relative overflow-hidden">
-        <img className="w-64 mt-2.5 mr-2.5" src="/images/logo.png" alt="" />
-        <div className="w-2.5 h-64 rotate-45 right-2 absolute bg-bg-green" />
-        <div className="w-20 h-64 rotate-45 -right-[100px] absolute bg-bg-green" />
+      <div className="h-20 w-full flex justify-center items-center bg-tertiary relative overflow-hidden"
+      onClick={() => navigate(ROUTES.BL_HOME)}>
+        <img className="w-52 mt-2.5 mr-2.5 z-50" src="/images/logo.png" alt="" />
+        <div className="w-2.5 h-64 rotate-45 right-0 absolute bg-bg-green" />
+        <div className="w-20 h-64 rotate-45 -right-[108px] absolute bg-bg-green" />
       </div>
     );
   }

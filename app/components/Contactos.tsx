@@ -109,7 +109,7 @@ export default function Contacto({ data }: ContactoProps) {
             title={`Mapa de ubicación de ${data.CornerInfo.title}`}
           ></iframe>
         </ContactoCard>
-        <div className="flex flex-col-reverse gap-16 lg:flex-row  w-[90%] py-20">
+        <div className="flex flex-col-reverse gap-16 lg:flex-row  w-[90%] py-8  md:pt-20 md:pb-12">
           <LogoFooter
             logo={data.CornerInfo.logo}
             title={data.CornerInfo.title}
@@ -118,17 +118,17 @@ export default function Contacto({ data }: ContactoProps) {
           <div className="flex flex-col shrink w-full">
             <SocialCard
               logo="/images/facebook_logo.png"
-              href=""
+              href="https://www.facebook.com/banco.universitario"
               text="@bancouniversitariove"
             />
             <SocialCard
               logo="/images/instagram_logo.png"
-              href=""
+              href="https://www.instagram.com/bancouniversitario"
               text="@bancouniversitariove"
             />
             <SocialCard
               logo="/images/x_logo.png"
-              href=""
+              href="https://x.com/bancouniversitario"
               text="@bancouniversitariove"
             />
           </div>
