@@ -20,9 +20,9 @@ export default function LayoutBancaEnLinea({
   const { "*": splat } = params;
 
   return (
-    <main className="w-screen h-screen flex justify-center items-center bg-dirty-white">
+    <main className="w-screen flex justify-center items-center bg-dirty-white">
       <section
-        className="grid w-screen h-screen max-w-[1650px] max-h-[850px]"
+        className="grid w-screen max-w-[1650px]"
         style={{ gridTemplateColumns: "auto 1fr" }}
       >
         <SideBar splat={splat} />
@@ -30,8 +30,8 @@ export default function LayoutBancaEnLinea({
           className="grid w-full h-full"
           style={{ gridTemplateRows: "auto 1fr" }}
         >
-          <div className="h-20 w-full flex justify-center items-center relative">
-            <div className="h-full w-[90%] flex flex-row justify-between items-center">
+          <div className="h-20 w-full flex justify-center items-center sticky top-0 bg-dirty-white z-50">
+            <div className="h-full w-[90%] flex flex-row justify-between items-center ">
               <h2 className="font-bold ml-5">
                 Bienvenido, Yolbert Torrealba!
               </h2>
@@ -42,7 +42,7 @@ export default function LayoutBancaEnLinea({
                 onClick={() => navigate(ROUTES.HOME)}
               />
             </div>
-            <div className="h-[1px] w-[93%] bg-bg-green absolute bottom-0" />
+            <div className="h-px w-[93%] bg-bg-green absolute bottom-0" />
           </div>
           <Routes>
             <Route index element={<BancaHome />} />
