@@ -9,6 +9,9 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { Provider } from "react-redux";
+import { store } from "~/redux/reduxStore";
+
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -30,7 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="overflow-x-hidden">
+      <body>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -40,7 +43,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    
+    // para redux
+    <Provider store={store}>
+      <Outlet />
+    </Provider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
