@@ -39,7 +39,7 @@ export default function TopBar() {
           <PrimaryButton
             text="En linea"
             px={130}
-            onClick={() => navigate(ROUTES.BL_HOME)}
+            onClick={() => navigate(ROUTES.LOGIN)}
           />
         </div>
       </div>

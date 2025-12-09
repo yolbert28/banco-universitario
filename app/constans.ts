@@ -2,6 +2,8 @@
 export enum ROUTES {
   HOME = "/",
   ABOUT = "/about",
+  LOGIN= "/login",
+  REGISTER = "/register",
   BL_HOME = "/banca-en-linea/",
   BL_MOVEMENTS = "/banca-en-linea/movimientos",
   BL_TRANSFERS = "/banca-en-linea/transferencias",

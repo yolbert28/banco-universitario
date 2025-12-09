@@ -8,5 +8,7 @@ import {
 export default [
   index("routes/home.tsx"),
   route("/about", "routes/about.tsx"),
+  route("/login","routes/BancaEnLinea/LoginPage.tsx"),
+  route("/register","routes/BancaEnLinea/RegistePage.tsx"),
   route("/banca-en-linea/*", "routes/BancaEnLinea/layout.tsx"),
 ] satisfies RouteConfig;
