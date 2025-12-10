@@ -26,10 +26,10 @@ export const login = createAsyncThunk(
     if (response.errors && response.errors.length > 0) {
       return rejectWithValue(response.errors[0].error);
     }
-    return response.data;
+  
+    return response.data; 
   }
 );
-
 
 export const register = createAsyncThunk(
   'user/fetchRegister',
@@ -79,7 +79,8 @@ export const userSlice = createSlice({
         state.loading = false;
         state.isLogged = true;
         state.value = action.payload;
-        if (action.payload.jwt) setJWT(action.payload.jwt);
+
+        if (action.payload && action.payload.jwt) setJWT(action.payload.jwt);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -93,7 +94,7 @@ export const userSlice = createSlice({
       })
       .addCase(register.fulfilled, (state) => {
         state.loading = false;
-        state.registerSuccess = true; // ¡Registro exitoso!
+        state.registerSuccess = true; 
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;

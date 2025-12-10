@@ -8,10 +8,11 @@ export interface LoginValues{
 export interface RegisterValues{
     email:string;
     password?: string;
-    firts_name: string;
+    first_name: string;
     last_name: string;
     document_number: string;
     phone_number: string;
+    birth_date: string;
     user_type: "V" | "J" | "E";
 }
 

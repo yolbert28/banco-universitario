@@ -15,6 +15,7 @@ export const apiHttp = async (
     params: any = null,
     options: AxiosRequestConfig = {}
 ) => {
+    // ... (Código de headers, url y config sin cambios)
     const headers = {
         ...defaultHeaders,
         ...(options.headers || {})
@@ -51,10 +52,16 @@ export const apiHttp = async (
         console.error(" Error en apiHttp:", error);
 
         if (error.response) {
-            return {
-                data:null,
-                errors: [{ error: error.response.data.error || "Error del servidor" }]
-            };
+        
+           let errorMessage = 
+                error.response.data.error || 
+                error.response.data.message || 
+                "Error del servidor"; 
+
+           return {
+            data:null,
+            errors:[{ error: errorMessage }] 
+           }
         } else {
             return {
                 data:null,
@@ -63,5 +70,3 @@ export const apiHttp = async (
         }
     }
 };
-
-

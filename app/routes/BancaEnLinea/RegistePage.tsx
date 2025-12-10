@@ -2,11 +2,11 @@ import React, { useState, useEffect, type ChangeEvent, type FormEvent } from 're
 import AuthLayout from "~/components/BancaEnLinea/AuthLayout";
 import { useNavigate } from "react-router";
 import AuthButton from "~/components/BancaEnLinea/AuthButton";
-// Redux
 import { useDispatch, useSelector } from "react-redux";
 import { register, selectUserErrorMessage, selectUserLoading, selectRegisterSuccess, clearError } from "~/redux/user/userSlice";
 import type { AppDispatch, rootState } from '~/redux/reduxStore';
 import type { RegisterValues } from '~/api/modules/User';
+import { IconProgressCheck, IconX } from '@tabler/icons-react';
 
 // Tipos del formulario local
 interface IFormData {
@@ -29,6 +29,12 @@ interface IInputFieldProps {
     error?: string; 
 }
 
+interface SuccessModalProps {
+    message: string;
+    isOpen: boolean;
+    onClose: () => void;
+}
+
 const InputField: React.FC<IInputFieldProps> = ({ name, type = 'text', placeholder, value, onChange, error }) => (
     <div className="w-full max-w-95"> 
         <div className={`relative rounded-xl border-3 ${error ? 'border-red-500' : 'border-[#085F63]'}`}> 
@@ -48,14 +54,55 @@ const InputField: React.FC<IInputFieldProps> = ({ name, type = 'text', placehold
     </div>
 );
 
+const SuccessModal: React.FC<SuccessModalProps> = ({ message, isOpen, onClose }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#085F63] ">
+            <div className="bg-[#E5FFFD] p-6 rounded-xl shadow-2xl max-w-sm w-full border-4 border-[#49BEB7] transform transition-all duration-300 scale-100">
+                <div className="flex justify-between items-start">
+                    <div className="flex flex-col items-center w-full">
+                        <IconProgressCheck stroke={2} className="text-[#085F63] w-12 h-12 mb-3" />
+                        <h2 className="text-xl font-bold text-[#085F63] mb-2">¡Registro Exitoso!</h2>
+                        <p className="text-center text-[#49BEB7] mb-4">{message}</p>
+                    </div>
+                    
+                    <button onClick={onClose} className="text-[#085F63] hover:text-red-500 transition-colors p-1 absolute top-2 right-2">
+                        <IconX size={20} />
+                    </button>
+                </div>
+                
+                <AuthButton text="Continuar" onClick={onClose} />
+            </div>
+        </div>
+    );
+};
+
 const RegisterPage: React.FC = () => {
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
     // Estado Redux
     const loading = useSelector((state: rootState) => selectUserLoading(state));
-    const apiError = useSelector((state: rootState) => selectUserErrorMessage(state));
-    const success = useSelector((state: rootState) => selectRegisterSuccess(state));
+    const errorMessage = useSelector((state: rootState) => selectUserErrorMessage(state));
+    const registerSuccess = useSelector((state: rootState) => selectRegisterSuccess(state));
+
+    useEffect(() => {
+        if (registerSuccess) {
+            setIsModalOpen(true); 
+
+            const timer = setTimeout(() => {
+                setIsModalOpen(false); 
+                dispatch(clearError()); 
+                navigate('/login'); 
+            }, 10000); 
+
+            return () => clearTimeout(timer); 
+        }
+    }, [registerSuccess, dispatch, navigate])
 
     const [formData, setFormData] = useState<IFormData>({
         cedula: '',
@@ -74,20 +121,12 @@ const RegisterPage: React.FC = () => {
         dispatch(clearError());
     }, [dispatch]);
 
-    // Si el registro es exitoso, redirigir al login
-    useEffect(() => {
-        if (success) {
-            alert("¡Registro exitoso! Por favor inicia sesión.");
-            navigate("/login");
-            dispatch(clearError()); 
-        }
-    }, [success, navigate, dispatch]);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         
-        // Limpiar errores locales al escribir
+        
         if (formErrors[name as keyof IFormData]) {
             setFormErrors(prev => ({ ...prev, [name]: undefined }));
         }
@@ -109,34 +148,48 @@ const RegisterPage: React.FC = () => {
         e.preventDefault();
         if (!validateForm()) return;
 
+        const birthDateISO = new Date(formData.fechaNacimiento).toISOString();
     
         const apiPayload: RegisterValues = {
             email: formData.email,
             password: formData.password,
-            firts_name: formData.nombres,
+            first_name: formData.nombres,
             last_name: formData.apellidos,
             document_number: formData.cedula,
             phone_number: formData.telefono,
+            birth_date: birthDateISO,
             user_type: "V" 
         };
 
         dispatch(register(apiPayload));
     };
 
+    const showForm = !registerSuccess;
+
     return (
         <AuthLayout title="Registro" isLogin={false}>
+
+           <SuccessModal
+                message="Tu cuenta ha sido creada con éxito. Serás redirigido en 10 segundos."
+                isOpen={isModalOpen}
+                onClose={() => {
+                
+                    setIsModalOpen(false);
+                    dispatch(clearError());
+                    navigate('/login');
+                }}
+            />
             
             <div className="absolute bottom-0 left-0 w-[200%] h-full bg-[#085F63] transform origin-bottom-left rotate-[-20deg] translate-y-90"></div>
             <div className=" absolute bottom-0 left-0 w-[2000%] h-2 bg-[#C7FFFA] transform origin-bottom-left rotate-[-20deg] translate-y-[25%] -translate-x-[12.7%]"></div>
 
             <form onSubmit={handleSubmit} className="space-y-6 relative z-30 w-full max-w-md mx-auto">
                 
-                {/* Mensaje de Error API */}
-                {apiError && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center">
-                        {apiError}
-                    </div>
-                )}
+                {errorMessage && (
+                        <div className="text-red-200 bg-red-900/50 p-2 rounded text-center text-sm font-bold my-4">
+                            {errorMessage}
+                        </div>
+                    )}
 
                 <div className="flex flex-col items-center  gap-4">
                     <InputField name="cedula" placeholder="Cédula" value={formData.cedula} onChange={handleChange} error={formErrors.cedula} />
