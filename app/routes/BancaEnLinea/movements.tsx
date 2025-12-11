@@ -1,6 +1,25 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Pagination from "~/components/BancaEnLinea/Pagination";
+import { movements, selectMovementErrorMessage, selectMovementLoading, selectRecentsMovements } from "~/redux/movement/movementSlice";
+import type { AppDispatch, rootState } from "~/redux/reduxStore";
 
 export default function Movements() {
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const loading = useSelector((state: rootState) => selectMovementLoading(state));
+  const errorMessage = useSelector((state: rootState) =>
+    selectMovementErrorMessage(state)
+  );
+  const recentsMovements = useSelector((state: rootState) => selectRecentsMovements(state));
+
+  useEffect(() => {
+    dispatch(movements());
+    console.log(recentsMovements);
+  }, []);
+
+
   return (
     <div className="flex flex-col w-full px-12 py-8">
       <div className="flex flex-row justify-between w-full">

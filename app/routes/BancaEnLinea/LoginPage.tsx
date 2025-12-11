@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
     // Si el usuario ya está logueado, redirigir al dashboard/home
     useEffect(() => {
         if (isLogged) {
-            navigate("/"); 
+            navigate("/banca-en-linea"); 
         }
         dispatch(clearError()); 
     }, [isLogged, navigate, dispatch]);
@@ -35,40 +35,40 @@ const LoginPage: React.FC = () => {
     return (
         <AuthLayout title="Login" isLogin={true}>
            
-            <div className="absolute bottom-0 left-0 w-[200%] h-full bg-[#085F63] transform origin-bottom-left rotate-[-20deg] translate-y-83 z-10"></div>
-            <div className="absolute bottom-0 left-0 w-[1280%] h-2 bg-[#C7FFFA] transform origin-bottom-left rotate-[-20deg] translate-y-[280px] -translate-x-[15%] z-20"></div>
+            <div className="absolute bottom-0 left-0 w-[200%] h-full bg-primary transform origin-bottom-left rotate-[-20deg] translate-y-83 z-10"></div>
+            <div className="absolute bottom-0 left-0 w-[1280%] h-2 bg-tertiary transform origin-bottom-left rotate-[-20deg] translate-y-[280px] -translate-x-[15%] z-20"></div>
 
            <form onSubmit={handleLogin} className="space-y-4 relative z-30"> 
 
             <div className="flex flex-col items-center space-y-8 ">
             {/* Campo de correo electrónico */}
                 <div className="w-full max-w-95">
-                    <div className="relative rounded-xl border-3 border-[#085F63]">
+                    <div className="relative rounded-xl border-3 border-primary">
                         <input
                         type="email"
                         placeholder="Correo electrónico"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full p-3 rounded-lg bg-[#E5FFFD] text-[#085F63] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A8D8D3]"
+                        className="w-full p-3 rounded-lg bg-[#E5FFFD] text-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A8D8D3]"
                         required
                         />
-                        <div className="absolute  w-full h-[6px] bg-[#49BEB7] rounded-b-xl "></div>
+                        <div className="absolute  w-full h-1.5 bg-secondary rounded-b-xl "></div>
                     </div>
                 </div>
 
 
             {/* Contraseña */}
                 <div className="w-full max-w-95">
-                    <div className="relative rounded-xl border-3 border-[#085F63]">
+                    <div className="relative rounded-xl border-3 border-primary">
                         <input
                         type="password"
                         placeholder="Contraseña"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full p-3 rounded-lg bg-[#E5FFFD] text-[#085F63] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A8D8D3]"
+                        className="w-full p-3 rounded-lg bg-[#E5FFFD] text-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A8D8D3]"
                         required
                         />
-                        <div className="absolute  w-full h-[6px] bg-[#49BEB7] rounded-b-xl "></div>
+                        <div className="absolute  w-full h-1.5 bg-secondary rounded-b-xl "></div>
                     </div>
                 </div>
             </div>

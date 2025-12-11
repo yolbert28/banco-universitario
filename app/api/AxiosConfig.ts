@@ -21,6 +21,7 @@ export const apiHttp = async (
     } as Record<string, string>;
 
     const jwt = getJWT();
+    
     if (jwt) {
         headers["Authorization"] = `Bearer ${jwt}`;
     }
