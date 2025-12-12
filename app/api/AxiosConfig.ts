@@ -15,7 +15,7 @@ export const apiHttp = async (
     params: any = null,
     options: AxiosRequestConfig = {}
 ) => {
-    // ... (Código de headers, url y config sin cambios)
+    
     const headers = {
         ...defaultHeaders,
         ...(options.headers || {})
