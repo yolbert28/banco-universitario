@@ -22,6 +22,7 @@ export const apiHttp = async (
     } as Record<string, string>;
 
     const jwt = getJWT();
+    
     if (jwt) {
         headers["Authorization"] = `Bearer ${jwt}`;
     }
@@ -38,7 +39,7 @@ export const apiHttp = async (
         ...options
     };
 
-    console.log (` ${method.toUpperCase()} ${url}`);
+    // console.log (` ${method.toUpperCase()} ${url}`);
 
     try {
         const response = await axios(config);

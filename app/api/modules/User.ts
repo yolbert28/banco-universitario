@@ -24,5 +24,8 @@ export const loginAPI = (loginValues: LoginValues) =>
 export const whoAmIAPI = () =>
     apiHttp("GET", `/v1/client/user/whoami`);
 
+export const balanceAPI = () =>
+    apiHttp("GET", `/v1/client/user/balance`);
+
 export const registerAPI = (registerValues: RegisterValues) => 
   apiHttp("POST", `/v1/public/client/user/register`, registerValues);

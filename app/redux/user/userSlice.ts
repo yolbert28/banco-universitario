@@ -1,9 +1,12 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { loginAPI, whoAmIAPI, registerAPI, type LoginValues, type RegisterValues } from '~/api/modules/User'; 
+import { loginAPI, whoAmIAPI, registerAPI, type LoginValues, type RegisterValues, balanceAPI } from '~/api/modules/User'; 
 import { setJWT, removeJWT } from '~/api/LocalStorage'; 
+import type { User } from '~/types/user';
+import { userAdapter } from '~/types/adapters/userAdapter';
 
 interface UserState {
-  value: any | null;
+  value: User | null;
+  balanceValues: any | null;
   errorMessage: string;
   loading: boolean;
   isLogged: boolean;
@@ -12,6 +15,7 @@ interface UserState {
 
 const initialState: UserState = {
   value: null,
+  balanceValues: null,
   errorMessage: "",
   loading: false,
   isLogged: false,
@@ -50,6 +54,17 @@ export const whoAmI = createAsyncThunk(
     if (response.errors && response.errors.length > 0) {
       return rejectWithValue(response.errors[0].error);
     }
+    return userAdapter(response.data.data);
+  }
+);
+
+export const balance = createAsyncThunk(
+  'user/balance',
+  async (_, { rejectWithValue }) => {
+    const response = await balanceAPI();
+    if (response.errors && response.errors.length > 0) {
+      return rejectWithValue(response.errors[0].error);
+    }
     return response.data;
   }
 );
@@ -79,8 +94,7 @@ export const userSlice = createSlice({
         state.loading = false;
         state.isLogged = true;
         state.value = action.payload;
-
-        if (action.payload && action.payload.jwt) setJWT(action.payload.jwt);
+        if (action.payload.data.jwt) setJWT(action.payload.data.jwt);
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -109,6 +123,19 @@ export const userSlice = createSlice({
         state.isLogged = false;
         state.value = null;
         removeJWT();
+      })
+      .addCase(balance.pending, (state) => {
+        state.loading = true;
+        state.errorMessage = "";
+      })
+      .addCase(balance.fulfilled, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.balanceValues = action.payload;
+      })
+      .addCase(balance.rejected, (state) => {
+        state.isLogged = false;
+        state.balanceValues = null;
+        removeJWT();
       });
   },
 });
@@ -120,5 +147,7 @@ export const selectIsLogged = (state: { user: UserState }) => state.user.isLogge
 export const selectUserErrorMessage = (state: { user: UserState }) => state.user.errorMessage;
 export const selectUserLoading = (state: { user: UserState }) => state.user.loading;
 export const selectRegisterSuccess = (state: { user: UserState }) => state.user.registerSuccess;
+export const selectUserValue = (state: { user: UserState }) => state.user.value;
+export const selectBalanceValues = (state: { user: UserState }) => state.user.balanceValues;
 
 export default userSlice.reducer;

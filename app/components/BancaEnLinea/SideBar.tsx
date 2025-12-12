@@ -9,10 +9,8 @@ interface SideBarProps {
 export default function SideBar({ splat }: SideBarProps) {
   const navigate = useNavigate();
 
-  console.log(splat);
-
   return (
-    <div className="bg-bg-green w-64 flex flex-col h-full">
+    <div className="bg-bg-green w-64 flex flex-col h-screen sticky top-0">
       {Logo(navigate)}
       <SideBarButton
         text="Inicio"

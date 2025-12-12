@@ -6,7 +6,7 @@ interface SocialCardProps {
 
 export default function SocialCard({ logo, href, text }: SocialCardProps) {
   return (
-    <a className="flex flex-col xl:max-w-[660px]" target="_blank" rel="noopener noreferrer" href={href}>
+    <a className="flex flex-col xl:max-w-[660px] hover:bg-primary " target="_blank" rel="noopener noreferrer" href={href}>
       <div className="grid items-center" style={{gridTemplateColumns: "60px auto 60px"}}>
         <img className="lg:w-12 lg:h-12 justify-self-center w-10 h-10 m-5" src={logo} alt="" />
         <strong className="font-bold text-lg md:text-xl lg:text-xl xl:text-xl wrap-break-word leading-tight text-dirty-white">{text}</strong>
