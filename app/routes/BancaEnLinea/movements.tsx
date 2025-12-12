@@ -85,7 +85,7 @@ export default function Movements() {
   };
 
   return (
-    <div className="flex flex-col w-full px-12 py-8">
+    <div className="flex flex-col w-full px-8 py-8 box-border">
       <div className="flex flex-row justify-between w-full">
         <strong>Movimientos</strong>
         <div className="flex flex-row gap-2">

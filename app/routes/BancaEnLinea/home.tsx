@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { initPage, setMultiplier } from "~/api/LocalStorage";
+import MovementTable from "~/components/BancaEnLinea/MovementTable";
 import PrimaryButton from "~/components/PrimaryButton";
 import { ROUTES } from "~/constans";
+import { movements, selectRecentsMovements } from "~/redux/movement/movementSlice";
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
 import {
   balance,
-  clearError,
   selectBalanceValues,
-  selectIsLogged,
-  selectUserErrorMessage,
   selectUserLoading,
   selectUserValue,
   whoAmI,
@@ -19,12 +19,13 @@ export default function BancaHome() {
   const navigate = useNavigate();
 
   const [reload, setReload] = useState(false);
+  const [showAccountNumber, setShowAccountNumber] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
 
   const loading = useSelector((state: rootState) => selectUserLoading(state));
-  const errorMessage = useSelector((state: rootState) =>
-    selectUserErrorMessage(state)
+  const recentsMovements = useSelector((state: rootState) =>
+    selectRecentsMovements(state)
   );
   const user = useSelector((state: rootState) => selectUserValue(state));
   const balanceValues = useSelector((state: rootState) =>
@@ -32,9 +33,17 @@ export default function BancaHome() {
   );
 
   useEffect(() => {
+    initPage()
+    setMultiplier("0")
     dispatch(whoAmI());
     dispatch(balance());
+    dispatch(movements())
   }, [reload]);
+
+  const handlerClickShowAccountNumber = () => {
+    setShowAccountNumber(!showAccountNumber);
+  };
+
 
   return (
     <div className="flex flex-col items-center px-16 py-8">
@@ -70,10 +79,10 @@ export default function BancaHome() {
               <h3 className="text-dirty-white text-xl">Número de cuenta</h3>
               <div className="flex flex-row w-full pr-6 justify-between items-center">
                 <strong className="text-dirty-white text-2xl ml-1">
-                  {user?.accountNumber}
+                  {showAccountNumber ? user?.accountNumber : "***************************"}
                 </strong>
-                <button onClick={() => {}}>
-                  <img className="h-8 w-8" src="/images/show.png" alt="" />
+                <button onClick={handlerClickShowAccountNumber}>
+                  <img className="h-8 w-8" src={ showAccountNumber ? "/images/hide.png" : "/images/show.png"} alt="" />
                 </button>
               </div>
             </div>
@@ -87,84 +96,7 @@ export default function BancaHome() {
               <strong>Ver Actividad</strong>
             </button>
           </div>
-          <table className="w-full mt-4">
-            <thead>
-              <tr className="sticky top-20 bg-dirty-white [&_td]:relative">
-                <td className="min-w-[150px] text-center mx-2 py-2">
-                  Fecha y hora
-                  <div className="border-b border-bg-green absolute bottom-0 w-full" />
-                </td>
-                <td className="pr-8 text-center">
-                  Descripción
-                  <div className="border-b border-bg-green absolute bottom-0 w-full" />
-                </td>
-                <td className="min-w-[100px] text-center mr-8">
-                  Cuenta
-                  <div className="border-b border-bg-green absolute bottom-0 w-full" />
-                </td>
-                <td className="min-w-40 text-center mx-2">
-                  Cantidad
-                  <div className="border-b border-bg-green absolute bottom-0 w-full" />
-                </td>
-                <td className="min-w-40 text-center mx-2">
-                  Saldo
-                  <div className="border-b border-bg-green absolute bottom-0 w-full" />
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="text-sm border-b border-bg-green">
-                <td className="text-center py-2">
-                  <p className="text-[12px]">Jul 14, 2023</p>
-                  <p className="text-[12px]">04:19 PM</p>
-                </td>
-                <td className="px-4  py-2">
-                  Pago de la mensualidad del internet Pago de la mensualidad del
-                  internet
-                </td>
-                <td className="text-center px-4">(********5678)</td>
-                <td className="text-center px-4">
-                  <strong>Bs. 50.252.100,00</strong>
-                </td>
-                <td className="text-center px-4">
-                  <strong>Bs. 50.252.100,00</strong>
-                </td>
-              </tr>
-              <tr className="text-sm border-b border-bg-green">
-                <td className="text-center py-2">
-                  <p className="text-[12px]">Jul 14, 2023</p>
-                  <p className="text-[12px]">04:19 PM</p>
-                </td>
-                <td className="px-4  py-2">
-                  Pago de la mensualidad del internet Pago de la mensualidad del
-                  internet
-                </td>
-                <td className="text-center px-4">(********5678)</td>
-                <td className="text-center px-4">
-                  <strong>Bs. 50.252.100,00</strong>
-                </td>
-                <td className="text-center px-4">
-                  <strong>Bs. 50.252.100,00</strong>
-                </td>
-              </tr>
-              <tr className="text-sm border-b border-bg-green">
-                <td className="text-center py-2">
-                  <p className="text-[12px]">Jul 14, 2023</p>
-                  <p className="text-[12px]">04:19 PM</p>
-                </td>
-                <td className="px-4  py-2">
-                  Pago de la mensualidad del internet
-                </td>
-                <td className="text-center px-4">(********5678)</td>
-                <td className="text-center px-4">
-                  <strong>Bs. 50.252.100,00</strong>
-                </td>
-                <td className="text-center px-4">
-                  <strong>Bs. 50.252.100,00</strong>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <MovementTable recentsMovements={recentsMovements == null ? null : recentsMovements.slice(0, 3)} />
         </>
       )}
     </div>

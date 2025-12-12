@@ -23,11 +23,11 @@ export default function MovementTable({recentsMovements}: MovementTableProps) {
             Cuenta
             <div className="border-b border-bg-green absolute bottom-0 w-full" />
           </td>
-          <td className="min-w-40 text-center mx-2">
+          <td className="min-w-36 text-center mx-2">
             Cantidad
             <div className="border-b border-bg-green absolute bottom-0 w-full" />
           </td>
-          <td className="min-w-40 text-center mx-2">
+          <td className="min-w-36 text-center mx-2">
             Saldo
             <div className="border-b border-bg-green absolute bottom-0 w-full" />
           </td>
