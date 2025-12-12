@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { initPage, setMultiplier } from "~/api/LocalStorage";
+import LoadingSpinner from "~/components/BancaEnLinea/LoadingSpinner";
 import MovementTable from "~/components/BancaEnLinea/MovementTable";
-import PrimaryButton from "~/components/PrimaryButton";
 import { ROUTES } from "~/constans";
 import {
   movements,
@@ -49,7 +49,7 @@ export default function BancaHome() {
 
   return (
     <div className="flex flex-col items-center px-16 py-8">
-      {loading && <div></div>}
+      {loading && <LoadingSpinner />}
       <>
         <div className="flex flex-row w-full gap-8">
           <div

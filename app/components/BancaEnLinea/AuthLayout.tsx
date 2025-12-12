@@ -39,11 +39,11 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ title, children, isLogin }) => 
                                 {isLogin ? (
                                     
                                     <p className='text-[#E5FFFD]'> 
-                                        ¿Eres cliente nuevo? <a href={ROUTES.REGISTER} className="text-[#49BEB7] hover:text-[#F5A623] font-semibold">regístrate aquí</a>
+                                        ¿Eres cliente nuevo? <a href={ROUTES.REGISTER} className="text-secondary hover:text-accent font-semibold">regístrate aquí</a>
                                     </p>
                                 ) : (
                                     <p className='text-bg-light-blue'>
-                                        ¿Ya tienes cuenta? <a href={ROUTES.LOGIN} className="text-[#F5A623] hover:text-[#49BEB7] font-semibold">Inicia sesión</a>
+                                        ¿Ya tienes cuenta? <a href={ROUTES.LOGIN} className="text-secondary hover:text-accent font-semibold">Inicia sesión</a>
                                     </p>
                                 )}
                             </div>   
@@ -51,7 +51,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ title, children, isLogin }) => 
                     </div>
                 </div>
             </div>
-            <div className='w-full bg-[#085F63] text-[#E5FFFD] text-center py-5 relative z-10'>
+            <div className='w-full bg-primary text-dirty-white text-center py-5 relative z-10'>
                 {rNavigationBar}
             </div>
         </div>

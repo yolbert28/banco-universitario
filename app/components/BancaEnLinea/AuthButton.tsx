@@ -16,7 +16,7 @@ const AuthButton: React.FC<AuthButtonProps> = ({
             <button 
                 type={type} 
                 onClick={onClick}
-                className="bg-accent active:bg-dark-accent font-bold text-lg md:text-lg   text-primary py-4   rounded-md whitespace-nowrap px-3 sm:px-3 xl:px-20 lg:px-16 md:px-16 "
+                className="bg-accent active:bg-dark-accent font-bold text-lg md:text-lg   text-primary py-4   rounded-md whitespace-nowrap px-28"
             >
                 {text}
             </button>

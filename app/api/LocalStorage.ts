@@ -26,12 +26,15 @@ export const nextPage = () => {
 };
 
 export const getPage = () => {
-  const page = localStorage.getItem("page");
-  return page != null ? parseInt(page) : 1;
+  if (typeof window !== "undefined") {
+    const page = localStorage.getItem("page");
+    return page != null ? parseInt(page) : 1;
+  }
+  return null;
 };
 
 export const initPage = () => {
-  localStorage.setItem("page", "1");
+  if (typeof window !== "undefined") localStorage.setItem("page", "1");
 };
 
 export const prevPage = () => {
@@ -44,10 +47,14 @@ export const prevPage = () => {
 };
 
 export const getMultiplier = () => {
-  const multiplier = localStorage.getItem("multiplier");
-  return multiplier;
+  if (typeof window !== "undefined") {
+    const multiplier = localStorage.getItem("multiplier");
+    return multiplier;
+  }
+  return null;
 };
 
 export const setMultiplier = (multiplier: string) => {
-  localStorage.setItem("multiplier", multiplier.toString());
+  if (typeof window !== "undefined")
+    localStorage.setItem("multiplier", multiplier.toString());
 };
