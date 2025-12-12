@@ -42,8 +42,8 @@ const LoginPage: React.FC = () => {
 
             <div className="flex flex-col items-center space-y-8 ">
             {/* Campo de correo electrónico */}
-                <div className="w-full max-w-95">
-                    <div className="relative rounded-xl border-3 border-primary">
+                <div className="w-full max-w-95 relative overflow-hidden rounded-xl border-3 border-primary">
+                    <div>
                         <input
                         type="email"
                         placeholder="Correo electrónico"
@@ -52,14 +52,14 @@ const LoginPage: React.FC = () => {
                         className="w-full p-3 rounded-lg bg-[#E5FFFD] text-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A8D8D3]"
                         required
                         />
-                        <div className="absolute  w-full h-1.5 bg-secondary rounded-b-xl "></div>
+                        <div className="absolute  w-full bottom-0 h-1.5 bg-secondary rounded-b-xl "></div>
                     </div>
                 </div>
 
 
             {/* Contraseña */}
-                <div className="w-full max-w-95">
-                    <div className="relative rounded-xl border-3 border-primary">
+                <div className="w-full max-w-95 relative overflow-hidden rounded-xl border-3 border-primary">
+                    <div>
                         <input
                         type="password"
                         placeholder="Contraseña"
@@ -68,7 +68,7 @@ const LoginPage: React.FC = () => {
                         className="w-full p-3 rounded-lg bg-[#E5FFFD] text-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A8D8D3]"
                         required
                         />
-                        <div className="absolute  w-full h-1.5 bg-secondary rounded-b-xl "></div>
+                        <div className="absolute  w-full bottom-0 h-1.5 bg-secondary rounded-b-xl "></div>
                     </div>
                 </div>
             </div>

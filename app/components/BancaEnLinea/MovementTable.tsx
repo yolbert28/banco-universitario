@@ -2,11 +2,12 @@ import type { Movement } from "~/types/movements";
 import MovementTableItem from "./MovementTableItem";
 
 interface MovementTableProps {
-  recentsMovements: Movement[] | null
+  recentsMovements: Movement[] | null;
 }
 
-
-export default function MovementTable({recentsMovements}: MovementTableProps) {
+export default function MovementTable({
+  recentsMovements,
+}: MovementTableProps) {
   return (
     <table className="w-full mt-4">
       <thead>
@@ -34,9 +35,13 @@ export default function MovementTable({recentsMovements}: MovementTableProps) {
         </tr>
       </thead>
       <tbody>
-        {recentsMovements?.map((value: Movement) => (
-          <MovementTableItem key={value.id} movement={value} />
-        ))}
+        {recentsMovements != null ? (
+          recentsMovements?.map((value: Movement) => (
+            <MovementTableItem key={value.id} movement={value} />
+          ))
+        ) : (
+          <tr> <td className="text-center text-gray-500 py-10" colSpan={5}>No existen movimientos en la cuenta</td> </tr>
+        )}
       </tbody>
     </table>
   );

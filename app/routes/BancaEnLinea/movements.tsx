@@ -16,11 +16,11 @@ import {
   selectRecentsMovements,
 } from "~/redux/movement/movementSlice";
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
+import { meta } from "~/root";
 
 export default function Movements() {
   const dispatch = useDispatch<AppDispatch>();
   const [currentPage, setCurrentPage] = useState(getPage());
-
 
   const loading = useSelector((state: rootState) =>
     selectMovementLoading(state)
@@ -36,21 +36,14 @@ export default function Movements() {
 
   const currentCount = recentsMovements?.length || 0;
 
-  const calculatedFrom =
-    currentCount === 0
-      ? 0
-      : pageSize < 30
-        ? (currentPage - 2) * 30 + 1 + pageSize
-        : (currentPage - 1) * pageSize + 1;
+  const calculatedFrom = currentCount === 0 ? 0 : (currentPage - 1) * 30 + 1;
 
   const calculatedTo =
-    currentCount === 0
-      ? 0
-      : pageSize < 30
-        ? calculatedFrom + currentCount + pageSize
-        : calculatedFrom + currentCount - 1;
+    currentCount === 0 ? 0 : calculatedFrom + currentCount - 1;
 
   useEffect(() => {
+    initPage();
+    setMultiplier("0");
     dispatch(movements());
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       initPage();
