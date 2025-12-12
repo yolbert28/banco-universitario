@@ -15,9 +15,11 @@ export interface Movement {
   id: number;    
   acountNumber: string; 
   amount: number;           
-  balance: string;     
+  balance: number;     
   createAt: string;         
   description: string;          
   isExpense: boolean; 
-  updatedAt: string;       
+  updatedAt: string;  
+  date: string,
+  time: string     
 }

@@ -30,10 +30,10 @@ export const login = createAsyncThunk(
     if (response.errors && response.errors.length > 0) {
       return rejectWithValue(response.errors[0].error);
     }
-    return response.data;
+  
+    return response.data; 
   }
 );
-
 
 export const register = createAsyncThunk(
   'user/fetchRegister',
@@ -54,8 +54,6 @@ export const whoAmI = createAsyncThunk(
     if (response.errors && response.errors.length > 0) {
       return rejectWithValue(response.errors[0].error);
     }
-    console.log("userAdapter",userAdapter(response.data.data))
-    console.log("userAdapter2",response.data.data)
     return userAdapter(response.data.data);
   }
 );
@@ -110,7 +108,7 @@ export const userSlice = createSlice({
       })
       .addCase(register.fulfilled, (state) => {
         state.loading = false;
-        state.registerSuccess = true; // ¡Registro exitoso!
+        state.registerSuccess = true; 
       })
       .addCase(register.rejected, (state, action) => {
         state.loading = false;

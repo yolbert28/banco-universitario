@@ -1,24 +1,88 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  getPage,
+  initPage,
+  nextPage,
+  prevPage,
+  setMultiplier,
+} from "~/api/LocalStorage";
+import MovementTable from "~/components/BancaEnLinea/MovementTable";
 import Pagination from "~/components/BancaEnLinea/Pagination";
-import { movements, selectMovementErrorMessage, selectMovementLoading, selectRecentsMovements } from "~/redux/movement/movementSlice";
+import {
+  movements,
+  selectMovementLoading,
+  selectMovementQuantity,
+  selectRecentsMovements,
+} from "~/redux/movement/movementSlice";
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
 
 export default function Movements() {
-
   const dispatch = useDispatch<AppDispatch>();
+  const [currentPage, setCurrentPage] = useState(getPage());
 
-  const loading = useSelector((state: rootState) => selectMovementLoading(state));
-  const errorMessage = useSelector((state: rootState) =>
-    selectMovementErrorMessage(state)
+
+  const loading = useSelector((state: rootState) =>
+    selectMovementLoading(state)
   );
-  const recentsMovements = useSelector((state: rootState) => selectRecentsMovements(state));
+
+  const pageSize = useSelector((state: rootState) =>
+    selectMovementQuantity(state)
+  );
+
+  const recentsMovements = useSelector((state: rootState) =>
+    selectRecentsMovements(state)
+  );
+
+  const currentCount = recentsMovements?.length || 0;
+
+  const calculatedFrom =
+    currentCount === 0
+      ? 0
+      : pageSize < 30
+        ? (currentPage - 2) * 30 + 1 + pageSize
+        : (currentPage - 1) * pageSize + 1;
+
+  const calculatedTo =
+    currentCount === 0
+      ? 0
+      : pageSize < 30
+        ? calculatedFrom + currentCount + pageSize
+        : calculatedFrom + currentCount - 1;
 
   useEffect(() => {
     dispatch(movements());
-    console.log(recentsMovements);
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      initPage();
+      setMultiplier("0");
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      initPage();
+      setMultiplier("0");
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
 
+  // 4. HANDLERS
+  const handlerNextPage = () => {
+    // Evitar doble click o avanzar si está cargando
+    if (loading) return;
+
+    nextPage(); // Actualiza LocalStorage
+    setCurrentPage(getPage()); // Actualiza estado React para recalcular 'calculatedFrom'
+    dispatch(movements()); // Pide nuevos datos
+  };
+
+  const handlerPrevPage = () => {
+    if (loading || currentPage === 1) return;
+
+    prevPage();
+    setCurrentPage(getPage());
+    dispatch(movements());
+  };
 
   return (
     <div className="flex flex-col w-full px-12 py-8">
@@ -30,312 +94,27 @@ export default function Movements() {
             name=""
             id=""
             className="bg-primary text-dirty-white w-32 rounded-sm px-1"
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+              setMultiplier(e.target.value);
+              initPage();
+              setCurrentPage(getPage());
+              dispatch(movements());
+            }}
           >
-            <option value="Todos">Todos</option>
-            <option value="Credito">Credito</option>
-            <option value="Debito">Debito</option>
+            <option value="0">Todos</option>
+            <option value="1">Credito</option>
+            <option value="-1">Debito</option>
           </select>
         </div>
       </div>
-      <table className="w-full mt-4">
-        <thead>
-          <tr className="sticky top-20 bg-dirty-white [&_td]:relative">
-            <td className="min-w-[150px] text-center mx-2 py-2">
-              Fecha y hora
-              <div className="border-b border-bg-green absolute bottom-0 w-full"/>
-            </td>
-            <td className="pr-8 text-center">Descripción
-              <div className="border-b border-bg-green absolute bottom-0 w-full"/></td>
-            <td className="min-w-[100px] text-center mr-8">Cuenta
-              <div className="border-b border-bg-green absolute bottom-0 w-full"/></td>
-            <td className="min-w-40 text-center mx-2">Cantidad
-              <div className="border-b border-bg-green absolute bottom-0 w-full"/></td>
-            <td className="min-w-40 text-center mx-2">Saldo
-              <div className="border-b border-bg-green absolute bottom-0 w-full"/></td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-
-          <tr className="text-sm border-b border-bg-green">
-            <td className="text-center py-2">
-              <p className="text-[12px]">Jul 14, 2023</p>
-              <p className="text-[12px]">04:19 PM</p>
-            </td>
-            <td className="px-4  py-2">
-              Pago de la mensualidad del internet Pago de la mensualidad del
-              internet
-            </td>
-            <td className="text-center px-4">(********5678)</td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-            <td className="text-center px-4">
-              <strong>Bs. 50.252.100,00</strong>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div className="flex justify-end my-4 mx-12">
-        <Pagination/>
-      </div>
+      <MovementTable recentsMovements={recentsMovements} />
+      <Pagination
+        prevPage={handlerPrevPage}
+        nextPage={handlerNextPage}
+        fromQuantity={calculatedFrom}
+        toQuantity={calculatedTo}
+        quantity={pageSize}
+      />
     </div>
   );
 }

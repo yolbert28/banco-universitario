@@ -5,12 +5,14 @@ import type { Movement } from '~/types/movements';
 
 interface MovementState {
   recentsMovements: Movement[] | null;
+  quantity: number;
   errorMessage: string;
   loading: boolean;
 }
 
 const initialState: MovementState = {
   recentsMovements: null,
+  quantity: 0,
   errorMessage: "",
   loading: false,
 };
@@ -66,6 +68,7 @@ export const movementSlice = createSlice({
       })
       .addCase(movements.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
+        state.quantity = action.payload.length;
         state.recentsMovements = action.payload;
       })
       .addCase(movements.rejected, (state, action) => {
@@ -101,6 +104,7 @@ export const movementSlice = createSlice({
 // Selectores
 export const selectMovementErrorMessage = (state: { movement: MovementState }) => state.movement.errorMessage;
 export const selectMovementLoading = (state: { movement: MovementState }) => state.movement.loading;
+export const selectMovementQuantity = (state: { movement: MovementState }) => state.movement.quantity;
 export const selectRecentsMovements = (state: { movement: MovementState }) => state.movement.recentsMovements;
 
 export default movementSlice.reducer;
