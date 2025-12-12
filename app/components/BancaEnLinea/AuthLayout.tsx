@@ -13,16 +13,16 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ title, children, isLogin }) => 
   
     return (
         <div className="min-h-screen flex flex-col relative bg-[url('/images/Inicio_sesion.webp')] bg-center bg-cover" >
-            <div className="absolute inset-0 bg-[#001C1F] opacity-[63%] z-0"></div>
-            <div className="flex flex-grow items-center justify-center p-4 relative z-10">
+            <div className="absolute inset-0 bg-[#001C1F] opacity-63 z-0"></div>
+            <div className="flex grow items-center justify-center p-4 relative z-10">
           
-                <div className="bg-[#C7FFFA] w-[608px] h-auto p-5 rounded-2xl shadow-2xl relative overflow-hidden"> 
+                <div className="bg-tertiary w-[608px] h-auto p-5 rounded-2xl shadow-2xl relative overflow-hidden"> 
                     <div className="text-center mb-15   p-6 " >
 
                         <div className="relative z-10">
                             <div className="text-center mb-6">
 
-                                <img src="/images/logo.png" alt="Logo Banco Universitario" className=" h-[64px]  w-[441px]  mb-5" />
+                                <img src="/images/logo.png" alt="Logo Banco Universitario" className=" h-16  w-[441px]  mb-5" />
                                 
                                 <div className="flex items-center justify-center space-x-1 ">
                                     
