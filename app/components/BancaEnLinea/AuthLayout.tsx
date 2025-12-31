@@ -10,7 +10,6 @@ interface AuthLayoutProps {
 const AuthLayout: React.FC<AuthLayoutProps> = ({ title, children, isLogin }) => {
     const rNavigationBar = "Banco Universitario-RIF: G-70054489-7 Copyright © 2025. Todos los derechos reservados";
     
-  
     return (
         <div className="min-h-screen flex flex-col relative bg-[url('/images/Inicio_sesion.webp')] bg-center bg-cover" >
             <div className="absolute inset-0 bg-[#001C1F] opacity-63 z-0"></div>
