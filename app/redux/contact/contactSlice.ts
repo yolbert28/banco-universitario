@@ -27,26 +27,35 @@ export const fetchContacts = createAsyncThunk(
 
 export const addContact = createAsyncThunk(
     'contact/create',
-    async (newContact: Contact, { dispatch, rejectWithValue }) =>{
-        const response = await createContactAPI(newContact);
-        if (response.errors && response.errors.length > 0){
-            return rejectWithValue(response.errors[0].error);
-        }
-        dispatch(fetchContacts());
-        return response.data;
-    }
-);
+    async (newContact: Contact, { dispatch, rejectWithValue }) => {
+        try {
+            const response = await createContactAPI(newContact);
+       
+            if (response.errors && response.errors.length > 0) {
+                return rejectWithValue(response.errors[0].error);
+            }
 
+            dispatch(fetchContacts());
+            return response.data;
+        } catch (error: any) {
+            
+            const message = error.response?.data?.message || "La cuenta no existe o es inválida";
+            return rejectWithValue(message);
+        }
+    }
+)
 export const updateContact = createAsyncThunk(
     'contact/update',
-    async ({ id, data }: { id: string; data: Contact }, { dispatch, rejectWithValue }) =>{
-        const response = await updateContactAPI(id, data);
-        if (response.errors && response.errors.length > 0){
-            return rejectWithValue(response.errors[0].error);
+    async ({ id, contact }: { id: string; contact: Contact }, { dispatch, rejectWithValue }) => {
+            const response = await updateContactAPI(id, contact);
+            
+            if (response.errors && response.errors.length > 0) {
+                return rejectWithValue(response.errors[0].error);
+            }
+
+            dispatch(fetchContacts());
+            return response.data;
         }
-        dispatch(fetchContacts()); 
-        return response.data;
-    }
 );
 
 export const deleteContact = createAsyncThunk(
@@ -72,12 +81,16 @@ const contactSlice = createSlice({
             .addCase(fetchContacts.pending, (state) =>{
                 state.loading = true;
             })
-            .addCase (fetchContacts.fulfilled, (state, action: PayloadAction<Contact[]>) => {
+            .addCase (fetchContacts.fulfilled, (state, action: PayloadAction<any>) => {
             state.loading = false;
-            state.contactsList = action.payload;
+            state.contactsList = Array.isArray(action.payload) ? action.payload : action.payload.data || [];
             })
             .addCase(updateContact.pending, (state) =>{
                 state.loading = true;
+                state.errorMenssage = "";
+            })
+            .addCase(updateContact.fulfilled, (state) => {
+                state.loading = false;
             })
             .addCase(updateContact.rejected, (state, action)=>{
                 state.loading = false;
@@ -93,6 +106,7 @@ const contactSlice = createSlice({
                 state.loading = false;
                 state.errorMenssage = action.payload as string || "Error al eliminar el contacto";
             })
+            
             .addCase(fetchContacts.rejected, (state, action) => {
             state.loading = false;
             state.errorMenssage = action.payload as string || "Error al cargar contactos";

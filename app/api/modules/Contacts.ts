@@ -7,8 +7,6 @@ export interface Contact{
     description?: string;
 }
 
-//funcionalidades para el CRUD
-
 //Trae los contactos
 export const getContactsAPI = () =>
     apiHttp ("GET", `/v1/client/contact`);
@@ -19,7 +17,7 @@ export const createContactAPI = (contactData: Contact) =>
 
 //modificar un contacto
 export const updateContactAPI = (id: string, contactData: Contact) =>
-    apiHttp("PUT", `/v1/client/contact/${id}`, contactData);
+    apiHttp("PATCH", `/v1/client/contact/${id}`, contactData);
 
 //Elimina contacto
 export const deleteContactAPI = (id: string) =>
