@@ -18,6 +18,7 @@ import {
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
 import type { RegisterValues } from "~/api/modules/User";
 import { IconProgressCheck, IconX } from "@tabler/icons-react";
+import InputField from "~/components/BancaEnLinea/InputField";
 
 // Tipos del formulario local
 interface IFormData {
@@ -45,39 +46,6 @@ interface SuccessModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const InputField: React.FC<IInputFieldProps> = ({
-  name,
-  type = "text",
-  placeholder,
-  value,
-  onChange,
-  error,
-}) => (
-  <div
-    className={`w-full max-w-95 relative overflow-hidden border-3 ${error ? "border-red-500" : "border-primary"} rounded-xl`}
-  >
-    <input
-      type={type}
-      name={name}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      {...(name === "password" || name === "repeatPassword"
-        ? { minLength: 8 }
-        : {})}
-      className="w-full p-3 rounded-lg bg-[#E5FFFD] text-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A8D8D3]"
-      required
-    />
-    {!error && (
-      <div className="absolute w-full bottom-0 h-1.5 bg-secondary rounded-b-xl"></div>
-    )}
-
-    {error && (
-      <span className="text-red-500 text-xs ml-2 mt-1 block">{error}</span>
-    )}
-  </div>
-);
 
 const SuccessModal: React.FC<SuccessModalProps> = ({
   message,

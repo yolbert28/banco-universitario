@@ -19,7 +19,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ title, children, isLogin }) => 
                 <div className="bg-tertiary w-[608px] h-auto p-5 rounded-2xl shadow-2xl relative overflow-hidden"> 
                     <div className="text-center mb-15   p-6 " >
 
-                        <div className="relative z-10">
+                        <div className="relative z-10 flex flex-col items-center">
                             <div className="text-center mb-6">
 
                                 <img src="/images/logo.png" alt="Logo Banco Universitario" className=" h-16  w-[441px]  mb-5" />

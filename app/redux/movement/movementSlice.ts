@@ -20,7 +20,7 @@ const initialState: MovementState = {
 // --- LOGIN THUNK ---
 export const transfer = createAsyncThunk(
   'user/transfer',
-  async (transferValues: TransferValues, { rejectWithValue }) => {
+  async (transferValues: TransferValues, { rejectWithValue }: {rejectWithValue: any}) => {
     const response = await transferAPI(transferValues);
     if (response.errors && response.errors.length > 0) {
       return rejectWithValue(response.errors[0].error);
@@ -45,7 +45,7 @@ export const transfer = createAsyncThunk(
 // --- WHO AM I THUNK ---
 export const movements = createAsyncThunk(
   'user/movement',
-  async (_, { rejectWithValue }) => {
+  async (_:any, { rejectWithValue }: {rejectWithValue: any}) => {
     const response = await getMovementsAPI();
     if (response.errors && response.errors.length > 0) {
       return rejectWithValue(response.errors[0].error);
@@ -59,19 +59,19 @@ export const movementSlice = createSlice({
   name: 'movement',
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: (builder: any) => {
     builder
       // LOGIN
-      .addCase(movements.pending, (state) => {
+      .addCase(movements.pending, (state: any) => {
         state.loading = true;
         state.errorMessage = "";
       })
-      .addCase(movements.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(movements.fulfilled, (state: any, action: PayloadAction<any>) => {
         state.loading = false;
         state.quantity = action.payload.length;
         state.recentsMovements = action.payload;
       })
-      .addCase(movements.rejected, (state, action) => {
+      .addCase(movements.rejected, (state: any, action: any) => {
         state.loading = false;
         state.errorMessage = action.payload as string || "Error al cargar los movimientos";
       })
