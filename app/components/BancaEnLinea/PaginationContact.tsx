@@ -13,7 +13,7 @@ export default function Pagination({nextPage, prevPage, fromQuantity, toQuantity
   const rightImage = (toQuantity >= quantity) ? "/images/left_arrow_grey.png" : "/images/left_arrow_green.png"
 
   return (
-    <div className="flex justify-end my-4 mx-9 mx-auto">
+    <div className="flex justify-end mt-2 pb-2 mx-4">
       <div className="flex flex-row justify-between  w-45">
         <button className={`h-8 w-8 ${leftBackground} mx-auto p-1 rounded-md`}
         disabled = {fromQuantity <= 1}

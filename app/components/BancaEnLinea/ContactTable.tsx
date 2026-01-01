@@ -19,12 +19,10 @@ export default function ContactTable({ contacts, onEdit, onDelete }: ContactTabl
       <table className="w-full max-w-[549px] mx-auto ">
         <thead>
           <tr className="bg-white mx-auto">
-            <th className="py-3 px-12 text-left text-black  border-b-2 border-primary text-[20px] w-2/3">
+            <th className="py-3 px-12 text-left text-black border-b-2 border-primary text-[20px] w-2/3 font-normal">
               Nombre
             </th>
-            <th className="py-3 px-12 text-center text-black border-b-2  border-primary text-[20px] w-1/3">
-              Acciones
-            </th>
+            <th className="border-b-2 border-primary"></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-primary mx-auto">

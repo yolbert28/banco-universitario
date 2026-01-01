@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import userReducer from"./user/userSlice";
 import movementReducer from"./movement/movementSlice";
 import contactReducer from "./contact/contactSlice";
+import transferReducer from "./transfer/transferSlice";
 
 export const store =  configureStore ({
   reducer: {
     user: userReducer,
     movement: movementReducer,
     contact: contactReducer,
+    transfer: transferReducer
   },
 });
 

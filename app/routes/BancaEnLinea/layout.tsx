@@ -60,7 +60,7 @@ export default function LayoutBancaEnLinea({
       >
         <SideBar splat={splat} />
         <div
-          className="grid w-full h-full"
+          className="grid w-full h-full relative"
           style={{ gridTemplateRows: "auto 1fr" }}
         >
           <div className="h-20 w-full flex justify-center items-center sticky top-0 bg-dirty-white z-50">

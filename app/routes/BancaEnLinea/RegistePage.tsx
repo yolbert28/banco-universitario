@@ -14,11 +14,11 @@ import {
   selectUserLoading,
   selectRegisterSuccess,
   clearError,
+  login,
 } from "~/redux/user/userSlice";
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
 import type { RegisterValues } from "~/api/modules/User";
-//iconos de modal de exito
-{/*import { IconProgressCheck, IconX } from "@tabler/icons-react";*/}
+import InputField from "~/components/BancaEnLinea/InputField";
 
 // Tipos del formulario local
 interface IFormData {
@@ -48,77 +48,6 @@ interface SuccessModalProps {
   onClose: () => void;
 }*/}
 
-const InputField: React.FC<IInputFieldProps> = ({
-  name,
-  type = "text",
-  placeholder,
-  value,
-  onChange,
-  error,
-}) => (
-  
-  <div
-    className={`w-full max-w-95 relative overflow-hidden border-3 ${error ? "border-red-500" : "border-primary"} rounded-xl`}
-  >
-    <input
-      type={type}
-      name={name}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      {...(name === "password" || name === "repeatPassword"
-        ? { minLength: 8 }
-        : {})}
-      className="w-full p-3 rounded-lg bg-[#E5FFFD] text-primary placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#A8D8D3]"
-      required
-    />
-    {!error && (
-      <div className="absolute w-full bottom-0 h-1.5 bg-secondary rounded-b-xl"></div>
-    )}
-
-    {error && (
-      <span className="text-red-500 text-xs ml-2 mt-1 block">{error}</span>
-    )}
-  </div>
-);
-
-
-{/* modal de exito
-const SuccessModal: React.FC<SuccessModalProps> = ({
-  message,
-  isOpen,
-  onClose,
-}) => {
-  if (!isOpen) return null;
-  
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/82 ">
-      <div className="bg-[#E5FFFD] p-6 rounded-xl shadow-2xl max-w-sm w-full border-4 border-secondary transform transition-all duration-300 scale-100">
-        <div className="flex justify-between items-start">
-          <div className="flex flex-col items-center w-full">
-            <IconProgressCheck
-              stroke={2}
-              className="text-primary w-12 h-12 mb-3"
-            />
-            <h2 className="text-xl font-bold text-primary mb-2">
-              ¡Registro Exitoso!
-            </h2>
-            <p className="text-center text-secondary mb-4">{message}</p>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="text-primary hover:text-red-500 transition-colors p-1 absolute top-2 right-2"
-          >
-            <IconX size={20} />
-          </button>
-        </div>
-
-        <AuthButton text="Continuar" onClick={onClose} />
-      </div>
-    </div>
-  );
-};*/}
 
 const RegisterPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -153,8 +82,9 @@ const RegisterPage: React.FC = () => {
 
   useEffect(() => {
     if (registerSuccess) {
+        dispatch(login({ email: formData.email, password: formData.password }));
         dispatch(clearError()); 
-        navigate("/login?registered=true");
+        navigate("/banca-en-linea");
     }
 }, [registerSuccess, navigate, dispatch,]);
 
@@ -177,7 +107,7 @@ const RegisterPage: React.FC = () => {
     dispatch(clearError());
   }, [dispatch]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 

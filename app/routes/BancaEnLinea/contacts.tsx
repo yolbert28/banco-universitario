@@ -1,14 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchContacts, updateContact, addContact, deleteContact, selecContacts, selecContactLoading } from '~/redux/contact/contactSlice';
-import type { AppDispatch, rootState } from '~/redux/reduxStore';
-import { IconSearch, IconCheck} from '@tabler/icons-react';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchContacts,
+  updateContact,
+  addContact,
+  deleteContact,
+  selecContacts,
+  selecContactLoading,
+} from "~/redux/contact/contactSlice";
+import type { AppDispatch, rootState } from "~/redux/reduxStore";
+import { IconSearch, IconCheck } from "@tabler/icons-react";
 
-import LoadingSpinner from '~/components/BancaEnLinea/LoadingSpinner';
-import Pagination from '~/components/BancaEnLinea/PaginationContact';
-import ContactTable from '~/components/BancaEnLinea/ContactTable'; 
-import ContactModal from '~/components/BancaEnLinea/ContactModal';
-import type { Contact } from '~/components/BancaEnLinea/ContactModal';
+import LoadingSpinner from "~/components/BancaEnLinea/LoadingSpinner";
+import Pagination from "~/components/BancaEnLinea/PaginationContact";
+import ContactTable from "~/components/BancaEnLinea/ContactTable";
+import ContactModal from "~/components/BancaEnLinea/ContactModal";
+import type { Contact } from "~/components/BancaEnLinea/ContactModal";
+import Message from "~/components/BancaEnLinea/Message";
+import SecondaryButton from "~/components/SecondaryButton";
+import PrimaryButton from "~/components/PrimaryButton";
+import InputField from "~/components/BancaEnLinea/InputField";
+import DarkInteractionLayout from "~/components/BancaEnLinea/DarkInteractionLayout";
 
 const Contacts: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,21 +45,20 @@ const Contacts: React.FC = () => {
   const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
 
   const [currentContact, setCurrentContact] = useState<Contact>({
-    alias: '',
-    account_number: '',
-    description: ''
+    alias: "",
+    account_number: "",
+    description: "",
   });
 
   useEffect(() => {
     dispatch(fetchContacts());
-
   }, [dispatch]);
 
   useEffect(() => {
     if (showError) {
       const timer = setTimeout(() => {
         setShowError(false);
-        setTimeout(() => setErrorMessage(""), 500); 
+        setTimeout(() => setErrorMessage(""), 500);
       }, 3000);
 
       return () => clearTimeout(timer);
@@ -55,13 +66,16 @@ const Contacts: React.FC = () => {
   }, [showError]);
 
   // Lógica de Paginación y Filtro
-  const filteredContacts = contacts.filter(contact =>
+  const filteredContacts = contacts.filter((contact) =>
     contact.alias.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const indexOfLastContact = currentPage * contactsPerPage;
   const indexOfFirstContact = indexOfLastContact - contactsPerPage;
-  const currentContactsList = filteredContacts.slice(indexOfFirstContact, indexOfLastContact);
+  const currentContactsList = filteredContacts.slice(
+    indexOfFirstContact,
+    indexOfLastContact
+  );
 
   const paginateNext = () => {
     if (currentPage < Math.ceil(filteredContacts.length / contactsPerPage)) {
@@ -86,125 +100,59 @@ const Contacts: React.FC = () => {
     setShowConfirmDelete(true);
   };
 
-const handleConfirmDelete = async () => {
-  if (contactToDelete?.id) {
-    const result = await dispatch(deleteContact(contactToDelete.id));
-    
-    if (result.meta.requestStatus === 'fulfilled') {
-      setShowConfirmDelete(false); 
-      setShowDeleteSuccess(true);   
-      setContactToDelete(null);
+  const handleConfirmDelete = async () => {
+    if (contactToDelete?.id) {
+      const result = await dispatch(deleteContact(contactToDelete.id));
+
+      if (result.meta.requestStatus === "fulfilled") {
+        setShowConfirmDelete(false);
+        setShowDeleteSuccess(true);
+        setContactToDelete(null);
+      }
     }
-  }
-};
+  };
 
   const handleAddOrUpdate = async (e: React.FormEvent) => {
-  e.preventDefault();
-  let result: any;
+    e.preventDefault();
+    let result: any;
 
-  if (isEditing) {
-    if (!currentContact.id) return;
-    result = await dispatch(updateContact({ 
-        id: currentContact.id, 
-        contact: currentContact 
-    }));
-  } else {
-    result = await dispatch(addContact(currentContact));
-  }
+    if (isEditing) {
+      if (!currentContact.id) return;
+      result = await dispatch(
+        updateContact({
+          id: currentContact.id,
+          contact: currentContact,
+        })
+      );
+    } else {
+      result = await dispatch(addContact(currentContact));
+    }
 
-  if (result && result.meta && result.meta.requestStatus === 'fulfilled') {
-    setShowAddModal(false);
-    setShowSuccessModal(true);
-    setShowError(false);
-    setCurrentContact({ alias: '', account_number: '', description: '' });
-  } else if (result && result.payload) {
-
-    setErrorMessage(result.payload as string);
-    setShowError(true);
-  }
-};
+    if (result && result.meta && result.meta.requestStatus === "fulfilled") {
+      setShowAddModal(false);
+      setShowSuccessModal(true);
+      setShowError(false);
+      setCurrentContact({ alias: "", account_number: "", description: "" });
+    } else if (result && result.payload) {
+      setErrorMessage(result.payload as string);
+      setShowError(true);
+    }
+  };
 
   if (loading && contacts.length === 0) return <LoadingSpinner />;
 
   //para limpiar el modal de registo
   const handleCloseAddModal = () => {
-     setCurrentContact({ alias: '', account_number: '', description: '' });
+    setCurrentContact({ alias: "", account_number: "", description: "" });
     setShowAddModal(false);
     setShowError(false);
     setIsEditing(false);
-    
   };
 
-
   return (
-    <div className="relative flex flex-col w-full h-full px-8 py-6 items-center bg-dirty-white overflow-y-auto">
-      <div className="w-full   max-w-[730px] bg-primary rounded-3xl p-6 shadow-md border border-gray-100 flex flex-col min-h-[600px]">
-        
-        <h2 className="text-[32px] font-bold text-bg-light-blue  mb-5 text-center">
-          Contactos
-        </h2>
-
-        {/*Buscador de contactos */} 
-        <div className="w-full max-w-[549px] mx-auto  mb-5">
-          <div className="relative flex w-full w-full max-w-[549px] mx-auto gap-4 ">
-            <input 
-              type="text"
-              placeholder="Buscar contacto..."
-              className="w-full pl-6 py-2 rounded bg-bg-light-blue outline-none text-primary  font-medium shadow-inner border-b-8 border-[#49BEB7]"
-              value={searchTerm}
-              onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
-            />
-            <button className="bg-accent text-primary px-5 rounded border-b-4 border-black/10 active:border-b-0 ">
-              <IconSearch size={30} stroke={2} />
-            </button>
-          </div>
-        </div>
-
-        <div className="w-full max-w-[549px]  mx-auto ">
-        {loading ? (
-          <LoadingSpinner />
-        ) : filteredContacts.length === 0 ? (
-          
-          <div className="flex flex-col  items-center justify-center h-64 bg-white/50 rounded-3xl border-2 border-dashed border-primary/20 mx-auto max-w-[549px] mt-10">
-            <p className="text-primary text-xl font-medium italic">
-              No se poseen contactos registrados
-            </p>
-          </div>
-        ) : (
-          
-          <>
-          <div className='w-full max-w-[549px] bg-white mx-auto  ' >
-            <ContactTable 
-              contacts={currentContactsList} 
-              onEdit={handleOpenEdit} 
-              onDelete={handleOpenConfirm} 
-            />
-            <div className=" w-full max-w-[549px] mx-auto  bg-white">
-            <Pagination 
-              nextPage={paginateNext}
-              prevPage={paginatePrev}
-              fromQuantity={filteredContacts.length === 0 ? 0 : indexOfFirstContact + 1}
-              toQuantity={Math.min(indexOfLastContact, filteredContacts.length)}
-              quantity={filteredContacts.length} 
-            />
-            </div>
-          </div>
-          </>
-        )}
-      </div>
-
-        {/* Bonton añadir  */} 
-        <div className="mt-5 flex justify-center w-full max-w-[418px] mx-auto">
-          <button 
-            onClick={() => setShowAddModal(true)} 
-            className="max-w-[418px] mx-auto  bg-accent text-primary px-[56px] py-4 rounded font-bold hover:scale-101  ">
-            Añadir Contacto Nuevo
-          </button>
-        </div>
-      </div>
-
-      {/*Modal para agragar o modificar */} 
-      <ContactModal 
+    <>
+      {/*Modal para agragar o modificar */}
+      <ContactModal
         isOpen={showAddModal}
         isEditing={isEditing}
         contact={currentContact}
@@ -215,93 +163,136 @@ const handleConfirmDelete = async () => {
         onSubmit={handleAddOrUpdate}
       />
 
-      {/*Modal para confirmar eliminacion*/} 
+      {/*Modal para confirmar eliminacion*/}
       {showConfirmDelete && (
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-[130] p-4">
-          <div className="bg-[#004D4D] w-full max-w-[685px] rounded-[1rem] p-10 flex flex-col items-center shadow-2xl  ">
-            <h3 className="text-xl font-bold text-[#F2A154] mb-4">
-              Eliminar contacto
+        <DarkInteractionLayout
+          onClose={() => setShowConfirmDelete(false)}
+        >
+          <div className="bg-[#004D4D] w-full max-w-[580px] rounded-2xl p-10 flex flex-col items-center ">
+            <div className="flex items-center gap-2 mb-4">
+              <h3 className="text-xl font-bold text-accent">
+                Eliminar contacto
               </h3>
-            <p className=" text-center mb-10 text-lg text-[#F2A154]">
-              ¿Está seguro que desea eliminar al contacto<span className="font-bold text-[#F2A154]"> {contactToDelete?.alias}</span>?
+            </div>
+            <p className="text-accent text-center mb-10 text-lg">
+              ¿Está seguro que desea eliminar al contacto
             </p>
             <div className="flex gap-4 w-full">
-              <button 
+              <PrimaryButton
+                text="Eliminar"
+                textLarge={false}
+                maxWidth={true}
                 onClick={handleConfirmDelete}
-                className="flex-1 bg-accent text-primary py-4 rounded font-bold  hover:brightness-110 transition-all shadow-lg active:scale-95"
-              >
-                Eliminar
-              </button>
-              <button 
+              />
+              <SecondaryButton
+                text="Cancelar"
+                textLarge={false}
                 onClick={() => setShowConfirmDelete(false)}
-                className="flex-1 bg-[#F2A154]/40 border-2 border-[#F2A154] text-white py-4 rounded font-bold  hover:bg-white/5 transition-all"
-              >
-                Cancelar
-              </button>
+              />
             </div>
           </div>
-        </div>
+        </DarkInteractionLayout>
       )}
 
-      {/*Modal de eliminacion exitosa */}  
+      {/*Modal de eliminacion exitosa */}
       {showDeleteSuccess && (
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-[140] p-4">
-          <div className="bg-[#004D4D] w-full max-w-[580px] rounded-[1rem] p-10 flex flex-col items-center ">
-            <div className="flex items-center gap-2 mb-4">
-              <h3 className="text-xl font-bold text-[#F2A154]">
-                Contacto eliminado
-              </h3>
-              <IconCheck size={28} className="text-[#F2A154]" />
-            </div>
-            <p className="text-[#F2A154] text-center mb-10 text-lg">
-              El contacto fue eliminado exitosamente
-            </p>
-            <button 
-              onClick={() => setShowDeleteSuccess(false)}
-              className="w-full max-w-[250px] bg-[#F2A154] text-[#004D4D] py-3 rounded font-bold  hover:brightness-110 transition-all"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
+        <Message
+          title="Contacto eliminado"
+          message="El contacto fue eliminado exitosamente"
+          icon={<IconCheck size={28} className="text-accent" />}
+          onClick={() => setShowDeleteSuccess(false)}
+        />
       )}
 
       {/*Modal para registro o modificacion exitosa */}
       {showSuccessModal && (
-        <div className="absolute inset-0 bg-black/82 backdrop-blur-xs flex justify-center items-center z-[120] p-4">
-          <div className="bg-primary w-full max-w-150 rounded-[1rem] p-8 shadow-2xl flex flex-col items-center animate-in zoom-in duration-300">
-            
-            {/*Titulo*/} 
-            <div className="flex items-center justify-center gap-3 p-4 text-accent">
-              <h3 className="text-2xl font-bold italic">
-                {isEditing? 
-                'Contacto actualizado' : 
-                'Contacto registrado'
-                }
-              </h3>
-              <IconCheck stroke={2} size={32} />
+        <Message
+          title={isEditing ? "Contacto actualizado" : "Contacto registrado"}
+          message={
+            isEditing
+              ? "El contacto  fue actualizado correctamente"
+              : "El contacto fue registrado correctamente"
+          }
+          icon={<IconCheck size={28} className="text-accent" />}
+          onClick={() => setShowSuccessModal(false)}
+        />
+      )}
+
+      <div className="flex justify-center items-center">
+        <div className="w-[660px] px-16 pt-4 pb-8 my-8 bg-primary rounded-3xl shadow-md border border-gray-100 flex flex-col">
+          <h2 className="text-[32px] font-bold text-bg-light-blue  mb-5 text-center">
+            Contactos
+          </h2>
+
+          {/*Buscador de contactos */}
+          <div className="w-full mx-auto  mb-5">
+            <div className="relative flex w-full max-w-[549px] mx-auto gap-4 ">
+              <InputField
+                name="search"
+                type="text"
+                placeholder="Alias"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
+              <button className="bg-accent text-primary hover:bg-dark-accent h-[50px] aspect-square rounded flex justify-center items-center">
+                <IconSearch size={30} stroke={2} />
+              </button>
             </div>
+          </div>
 
-            {/*Mensaje*/} 
-            <p className="text-[#F2A154] text-center mb-8 font-medium px-4">
-              {isEditing? 
-              'El contacto  fue actualizado correctamente':
-              'El contacto fue registrado correctamente'
-              }
-            </p>
+          <div className="w-full max-w-[650px]  mx-auto ">
+            {loading ? (
+              <LoadingSpinner />
+            ) : filteredContacts.length === 0 ? (
+              <div className="flex flex-col  items-center justify-center h-64 bg-white/50 rounded-3xl border-2 border-dashed border-primary/20 mx-auto max-w-[549px] mt-10">
+                <p className="text-primary text-xl font-medium italic">
+                  No se poseen contactos registrados
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="w-full max-w-[549px] bg-white mx-auto  ">
+                  <ContactTable
+                    contacts={currentContactsList}
+                    onEdit={handleOpenEdit}
+                    onDelete={handleOpenConfirm}
+                  />
+                  <div className=" w-full bg-white">
+                    <Pagination
+                      nextPage={paginateNext}
+                      prevPage={paginatePrev}
+                      fromQuantity={
+                        filteredContacts.length === 0
+                          ? 0
+                          : indexOfFirstContact + 1
+                      }
+                      toQuantity={Math.min(
+                        indexOfLastContact,
+                        filteredContacts.length
+                      )}
+                      quantity={filteredContacts.length}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
 
-            {/* Boton*/}
-            <button 
-              onClick={() => setShowSuccessModal(false)}
-              className="w-75 bg-accent text-primary py-3 rounded font-bold  text-center "
+          {/* Bonton añadir  */}
+          <div className="mt-5 flex justify-center w-full max-w-[418px] mx-auto">
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="max-w-[418px] mx-auto  bg-accent text-primary px-[56px] py-4 rounded font-bold hover:scale-101  "
             >
-              Cerrar
+              Añadir Contacto Nuevo
             </button>
           </div>
         </div>
-      )}
-
-    </div>
+      </div>
+    </>
   );
 };
 
