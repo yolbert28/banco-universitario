@@ -14,10 +14,10 @@ import {
   selectUserLoading,
   selectRegisterSuccess,
   clearError,
+  login,
 } from "~/redux/user/userSlice";
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
 import type { RegisterValues } from "~/api/modules/User";
-import { IconProgressCheck, IconX } from "@tabler/icons-react";
 import InputField from "~/components/BancaEnLinea/InputField";
 
 // Tipos del formulario local
@@ -41,47 +41,14 @@ interface IInputFieldProps {
   error?: string;
 }
 
+{/*modal de exito 
 interface SuccessModalProps {
   message: string;
   isOpen: boolean;
   onClose: () => void;
-}
+}*/}
 
-const SuccessModal: React.FC<SuccessModalProps> = ({
-  message,
-  isOpen,
-  onClose,
-}) => {
-  if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary ">
-      <div className="bg-[#E5FFFD] p-6 rounded-xl shadow-2xl max-w-sm w-full border-4 border-secondary transform transition-all duration-300 scale-100">
-        <div className="flex justify-between items-start">
-          <div className="flex flex-col items-center w-full">
-            <IconProgressCheck
-              stroke={2}
-              className="text-primary w-12 h-12 mb-3"
-            />
-            <h2 className="text-xl font-bold text-primary mb-2">
-              ¡Registro Exitoso!
-            </h2>
-            <p className="text-center text-secondary mb-4">{message}</p>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="text-primary hover:text-red-500 transition-colors p-1 absolute top-2 right-2"
-          >
-            <IconX size={20} />
-          </button>
-        </div>
-
-        <AuthButton text="Continuar" onClick={onClose} />
-      </div>
-    </div>
-  );
-};
 
 const RegisterPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -97,20 +64,30 @@ const RegisterPage: React.FC = () => {
   const registerSuccess = useSelector((state: rootState) =>
     selectRegisterSuccess(state)
   );
-
+{/* para el modal de exito
   useEffect(() => {
     if (registerSuccess) {
+      navigate("/login");
       setIsModalOpen(true);
 
       const timer = setTimeout(() => {
         setIsModalOpen(false);
         dispatch(clearError());
         navigate("/login");
-      }, 10000);
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
   }, [registerSuccess, dispatch, navigate]);
+  */}
+
+  useEffect(() => {
+    if (registerSuccess) {
+        dispatch(login({ email: formData.email, password: formData.password }));
+        dispatch(clearError()); 
+        navigate("/banca-en-linea");
+    }
+}, [registerSuccess, navigate, dispatch,]);
 
   const [formData, setFormData] = useState<IFormData>({
     cedula: "",
@@ -131,7 +108,7 @@ const RegisterPage: React.FC = () => {
     dispatch(clearError());
   }, [dispatch]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
@@ -139,6 +116,16 @@ const RegisterPage: React.FC = () => {
       setFormErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
+
+  useEffect(() => {
+        if (errorMessage) {
+            const timer = setTimeout(() => {
+                dispatch(clearError());
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [errorMessage, dispatch])
 
   const validateForm = () => {
     const errors: Partial<Record<keyof IFormData, string>> = {};
@@ -176,15 +163,16 @@ const RegisterPage: React.FC = () => {
 
   return (
     <AuthLayout title="Registro" isLogin={false}>
+      {/*modal de exito
       <SuccessModal
-        message="Tu cuenta ha sido creada con éxito. Serás redirigido en 10 segundos."
+        message="Tu cuenta ha sido creada con éxito."
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
           dispatch(clearError());
           navigate("/login");
         }}
-      />
+      />*/}
 
       <div className="absolute bottom-0 left-0 w-[200%] h-full bg-primary transform origin-bottom-left rotate-[-20deg] translate-y-90"></div>
       <div className=" absolute bottom-0 left-0 w-[2000%] h-2 bg-tertiary transform origin-bottom-left rotate-[-20deg] translate-y-[25%] -translate-x-[12.7%]"></div>

@@ -1,3 +1,299 @@
-export default function Contacts(){
-  return <h1>contactos</h1>
-}
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchContacts,
+  updateContact,
+  addContact,
+  deleteContact,
+  selecContacts,
+  selecContactLoading,
+} from "~/redux/contact/contactSlice";
+import type { AppDispatch, rootState } from "~/redux/reduxStore";
+import { IconSearch, IconCheck } from "@tabler/icons-react";
+
+import LoadingSpinner from "~/components/BancaEnLinea/LoadingSpinner";
+import Pagination from "~/components/BancaEnLinea/PaginationContact";
+import ContactTable from "~/components/BancaEnLinea/ContactTable";
+import ContactModal from "~/components/BancaEnLinea/ContactModal";
+import type { Contact } from "~/components/BancaEnLinea/ContactModal";
+import Message from "~/components/BancaEnLinea/Message";
+import SecondaryButton from "~/components/SecondaryButton";
+import PrimaryButton from "~/components/PrimaryButton";
+import InputField from "~/components/BancaEnLinea/InputField";
+import DarkInteractionLayout from "~/components/BancaEnLinea/DarkInteractionLayout";
+
+const Contacts: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const contactsData = useSelector((state: rootState) => selecContacts(state));
+  const contacts = Array.isArray(contactsData) ? contactsData : [];
+  const loading = useSelector((state: rootState) => selecContactLoading(state));
+
+  // Estados
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isEditing, setIsEditing] = useState(false);
+  const contactsPerPage = 5;
+
+  // Estados de Modales
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [showDeleteSuccess, setShowDeleteSuccess] = useState(false);
+  const [contactToDelete, setContactToDelete] = useState<Contact | null>(null);
+
+  const [currentContact, setCurrentContact] = useState<Contact>({
+    alias: "",
+    account_number: "",
+    description: "",
+  });
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (showError) {
+      const timer = setTimeout(() => {
+        setShowError(false);
+        setTimeout(() => setErrorMessage(""), 500);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showError]);
+
+  // Lógica de Paginación y Filtro
+  const filteredContacts = contacts.filter((contact) =>
+    contact.alias.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const indexOfLastContact = currentPage * contactsPerPage;
+  const indexOfFirstContact = indexOfLastContact - contactsPerPage;
+  const currentContactsList = filteredContacts.slice(
+    indexOfFirstContact,
+    indexOfLastContact
+  );
+
+  const paginateNext = () => {
+    if (currentPage < Math.ceil(filteredContacts.length / contactsPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const paginatePrev = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleOpenEdit = (contact: Contact) => {
+    setIsEditing(true);
+    setCurrentContact(contact);
+    setShowAddModal(true);
+  };
+
+  const handleOpenConfirm = (contact: Contact) => {
+    setContactToDelete(contact);
+    setShowConfirmDelete(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (contactToDelete?.id) {
+      const result = await dispatch(deleteContact(contactToDelete.id));
+
+      if (result.meta.requestStatus === "fulfilled") {
+        setShowConfirmDelete(false);
+        setShowDeleteSuccess(true);
+        setContactToDelete(null);
+      }
+    }
+  };
+
+  const handleAddOrUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    let result: any;
+
+    if (isEditing) {
+      if (!currentContact.id) return;
+      result = await dispatch(
+        updateContact({
+          id: currentContact.id,
+          contact: currentContact,
+        })
+      );
+    } else {
+      result = await dispatch(addContact(currentContact));
+    }
+
+    if (result && result.meta && result.meta.requestStatus === "fulfilled") {
+      setShowAddModal(false);
+      setShowSuccessModal(true);
+      setShowError(false);
+      setCurrentContact({ alias: "", account_number: "", description: "" });
+    } else if (result && result.payload) {
+      setErrorMessage(result.payload as string);
+      setShowError(true);
+    }
+  };
+
+  if (loading && contacts.length === 0) return <LoadingSpinner />;
+
+  //para limpiar el modal de registo
+  const handleCloseAddModal = () => {
+    setCurrentContact({ alias: "", account_number: "", description: "" });
+    setShowAddModal(false);
+    setShowError(false);
+    setIsEditing(false);
+  };
+
+  return (
+    <>
+      {/*Modal para agragar o modificar */}
+      <ContactModal
+        isOpen={showAddModal}
+        isEditing={isEditing}
+        contact={currentContact}
+        setContact={setCurrentContact}
+        showError={showError}
+        errorMessage={errorMessage}
+        onClose={handleCloseAddModal}
+        onSubmit={handleAddOrUpdate}
+      />
+
+      {/*Modal para confirmar eliminacion*/}
+      {showConfirmDelete && (
+        <DarkInteractionLayout
+          onClose={() => setShowConfirmDelete(false)}
+        >
+          <div className="bg-[#004D4D] w-full max-w-[580px] rounded-2xl p-10 flex flex-col items-center ">
+            <div className="flex items-center gap-2 mb-4">
+              <h3 className="text-xl font-bold text-accent">
+                Eliminar contacto
+              </h3>
+            </div>
+            <p className="text-accent text-center mb-10 text-lg">
+              ¿Está seguro que desea eliminar al contacto
+            </p>
+            <div className="flex gap-4 w-full">
+              <PrimaryButton
+                text="Eliminar"
+                textLarge={false}
+                maxWidth={true}
+                onClick={handleConfirmDelete}
+              />
+              <SecondaryButton
+                text="Cancelar"
+                textLarge={false}
+                onClick={() => setShowConfirmDelete(false)}
+              />
+            </div>
+          </div>
+        </DarkInteractionLayout>
+      )}
+
+      {/*Modal de eliminacion exitosa */}
+      {showDeleteSuccess && (
+        <Message
+          title="Contacto eliminado"
+          message="El contacto fue eliminado exitosamente"
+          icon={<IconCheck size={28} className="text-accent" />}
+          onClick={() => setShowDeleteSuccess(false)}
+        />
+      )}
+
+      {/*Modal para registro o modificacion exitosa */}
+      {showSuccessModal && (
+        <Message
+          title={isEditing ? "Contacto actualizado" : "Contacto registrado"}
+          message={
+            isEditing
+              ? "El contacto  fue actualizado correctamente"
+              : "El contacto fue registrado correctamente"
+          }
+          icon={<IconCheck size={28} className="text-accent" />}
+          onClick={() => setShowSuccessModal(false)}
+        />
+      )}
+
+      <div className="flex justify-center items-center">
+        <div className="w-[660px] px-16 pt-4 pb-8 my-8 bg-primary rounded-3xl shadow-md border border-gray-100 flex flex-col">
+          <h2 className="text-[32px] font-bold text-bg-light-blue  mb-5 text-center">
+            Contactos
+          </h2>
+
+          {/*Buscador de contactos */}
+          <div className="w-full mx-auto  mb-5">
+            <div className="relative flex w-full max-w-[549px] mx-auto gap-4 ">
+              <InputField
+                name="search"
+                type="text"
+                placeholder="Alias"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setCurrentPage(1);
+                }}
+              />
+              <button className="bg-accent text-primary hover:bg-dark-accent h-[50px] aspect-square rounded flex justify-center items-center">
+                <IconSearch size={30} stroke={2} />
+              </button>
+            </div>
+          </div>
+
+          <div className="w-full max-w-[650px]  mx-auto ">
+            {loading ? (
+              <LoadingSpinner />
+            ) : filteredContacts.length === 0 ? (
+              <div className="flex flex-col  items-center justify-center h-64 bg-white/50 rounded-3xl border-2 border-dashed border-primary/20 mx-auto max-w-[549px] mt-10">
+                <p className="text-primary text-xl font-medium italic">
+                  No se poseen contactos registrados
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="w-full max-w-[549px] bg-white mx-auto  ">
+                  <ContactTable
+                    contacts={currentContactsList}
+                    onEdit={handleOpenEdit}
+                    onDelete={handleOpenConfirm}
+                  />
+                  <div className=" w-full bg-white">
+                    <Pagination
+                      nextPage={paginateNext}
+                      prevPage={paginatePrev}
+                      fromQuantity={
+                        filteredContacts.length === 0
+                          ? 0
+                          : indexOfFirstContact + 1
+                      }
+                      toQuantity={Math.min(
+                        indexOfLastContact,
+                        filteredContacts.length
+                      )}
+                      quantity={filteredContacts.length}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Bonton añadir  */}
+          <div className="mt-5 flex justify-center w-full max-w-[418px] mx-auto">
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="max-w-[418px] mx-auto  bg-accent text-primary px-[56px] py-4 rounded font-bold hover:scale-101  "
+            >
+              Añadir Contacto Nuevo
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Contacts;

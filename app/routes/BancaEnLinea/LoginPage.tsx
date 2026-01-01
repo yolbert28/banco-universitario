@@ -16,7 +16,6 @@ import InputField from "~/components/BancaEnLinea/InputField";
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -45,6 +44,15 @@ const LoginPage: React.FC = () => {
     <AuthLayout title="Login" isLogin={true}>
       <div className="absolute bottom-0 left-0 w-[200%] h-full bg-primary transform origin-bottom-left rotate-[-20deg] translate-y-83 z-10"></div>
       <div className="absolute bottom-0 left-0 w-[1280%] h-2 bg-tertiary transform origin-bottom-left rotate-[-20deg] translate-y-[280px] -translate-x-[15%] z-20"></div>
+
+
+        {/* Mensaje de Error de la API */}
+        {errorMessage && (
+          <div className="text-red-200 bg-red-900/50 p-2 rounded text-center text-sm font-bold">
+            {errorMessage}
+          </div>
+        )}
+
 
       <form
         onSubmit={handleLogin}

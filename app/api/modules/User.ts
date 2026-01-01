@@ -29,3 +29,6 @@ export const balanceAPI = () =>
 
 export const registerAPI = (registerValues: RegisterValues) => 
   apiHttp("POST", `/v1/public/client/user/register`, registerValues);
+
+export const verifyAccountAPI = (accountNumber: string) =>
+    apiHttp("GET", `/v1/client/user/account/${accountNumber}`);

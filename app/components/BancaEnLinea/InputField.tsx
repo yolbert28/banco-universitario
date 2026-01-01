@@ -13,6 +13,7 @@ interface InputFieldProps {
   error?: string;
   required?: boolean;
   lineNumber?: number;
+  disabled?: boolean;
 }
 
 export default function InputField({
@@ -24,6 +25,7 @@ export default function InputField({
   error,
   required = true,
   lineNumber = 1,
+  disabled = false,
 }: InputFieldProps) {
   return (
     <div
@@ -36,6 +38,7 @@ export default function InputField({
             placeholder={placeholder}
             value={value}
             onChange={onChange}
+            disabled={disabled}
             rows={lineNumber}
             className="w-full p-3 rounded-lg bg-[#E5FFFD] text-primary placeholder-primary focus:outline-none focus:ring-2 focus:ring-[#A8D8D3]"
             required={required}
@@ -53,6 +56,7 @@ export default function InputField({
             placeholder={placeholder}
             value={value}
             onChange={onChange}
+            disabled={disabled}
             {...(name === "password" || name === "repeatPassword"
               ? { minLength: 8 }
               : {})}
