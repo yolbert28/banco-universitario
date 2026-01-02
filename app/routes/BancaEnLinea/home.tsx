@@ -35,6 +35,13 @@ export default function BancaHome() {
     selectBalanceValues(state)
   );
 
+  
+// 3. Formateador para MONEDA: "23.843,95"
+const currencyFormatter = new Intl.NumberFormat("de-DE", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
   useEffect(() => {
     initPage();
     setMultiplier("0");
@@ -67,7 +74,7 @@ export default function BancaHome() {
               </button>
             </div>
             <strong className=" text-3xl ml-1">
-              Bs. {balanceValues?.data.balance},00
+              Bs. {currencyFormatter.format(balanceValues?.data.balance / 100) }
             </strong>
           </div>
           <div
