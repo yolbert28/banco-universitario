@@ -8,6 +8,8 @@ export interface Contact {
   alias: string;
   account_number: string;
   description?: string;
+  created_at?: string; 
+  updated_at?:string;
 }
 interface ContactModalProps {
   isOpen: boolean;

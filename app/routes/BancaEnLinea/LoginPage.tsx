@@ -40,24 +40,32 @@ const LoginPage: React.FC = () => {
     dispatch(login({ email, password }));
   };
 
+   useEffect(() => {
+          if (errorMessage) {
+              const timer = setTimeout(() => {
+                  dispatch(clearError());
+              }, 3000);
+  
+              return () => clearTimeout(timer);
+          }
+      }, [errorMessage, dispatch])
+
   return (
     <AuthLayout title="Login" isLogin={true}>
       <div className="absolute bottom-0 left-0 w-[200%] h-full bg-primary transform origin-bottom-left rotate-[-20deg] translate-y-83 z-10"></div>
       <div className="absolute bottom-0 left-0 w-[1280%] h-2 bg-tertiary transform origin-bottom-left rotate-[-20deg] translate-y-[280px] -translate-x-[15%] z-20"></div>
 
-
-        {/* Mensaje de Error de la API */}
-        {errorMessage && (
-          <div className="text-red-200 bg-red-900/50 p-2 rounded text-center text-sm font-bold">
-            {errorMessage}
-          </div>
-        )}
-
-
       <form
         onSubmit={handleLogin}
         className="space-y-4 relative max-w-[420px] z-30"
       >
+         {/* Mensaje de Error de la API 
+        {errorMessage && (
+          <div className="text-red-200 bg-red-900/50 p-2 rounded text-center text-sm font-bold">
+            {errorMessage}
+          </div>
+        )}*/}
+
         <div className="flex flex-col items-center space-y-8 ">
           {/* Campo de correo electrónico */}
           <InputField
