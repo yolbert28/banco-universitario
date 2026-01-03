@@ -49,7 +49,6 @@ export default function LayoutBancaEnLinea({
 
   useEffect(() => {
     dispatch(whoAmI());
-    console.log(whoAmI);
   }, []);
 
   return (

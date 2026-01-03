@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { loginAPI, whoAmIAPI, registerAPI, type LoginValues, type RegisterValues, balanceAPI } from '~/api/modules/User'; 
+import { loginAPI, whoAmIAPI, registerAPI, type LoginValues, type RegisterValues, balanceAPI, verifyAccountAPI } from '~/api/modules/User'; 
 import { setJWT, removeJWT } from '~/api/LocalStorage'; 
 import type { User } from '~/types/user';
 import { userAdapter } from '~/types/adapters/userAdapter';
@@ -11,6 +11,9 @@ interface UserState {
   loading: boolean;
   isLogged: boolean;
   registerSuccess: boolean; 
+  isVerifying: boolean;
+  isValidAccount: boolean;
+  verificationError: string | null;
 }
 
 const initialState: UserState = {
@@ -20,6 +23,9 @@ const initialState: UserState = {
   loading: false,
   isLogged: false,
   registerSuccess: false,
+  isVerifying: false,
+  isValidAccount: false,
+  verificationError: null,
 };
 
 // --- LOGIN THUNK ---
@@ -69,6 +75,21 @@ export const balance = createAsyncThunk(
   }
 );
 
+export const verifyAccount = createAsyncThunk(
+  "user/verifyAccount",
+  async (accountNumber: string, { rejectWithValue }) => {
+    try {
+      const response = await verifyAccountAPI(accountNumber);
+      if (response.data && (!response.errors || response.errors.length === 0)) {
+        return true; // Cuenta válida
+      }
+      return rejectWithValue(response.errors?.[0]?.error || "Cuenta no válida");
+    } catch (error: any) {
+      return rejectWithValue(error.message || "Error al verificar la cuenta");
+    }
+  }
+);
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -81,6 +102,11 @@ export const userSlice = createSlice({
     clearError: (state) => {
       state.errorMessage = "";
       state.registerSuccess = false;
+    },
+    resetVerification: (state) => {
+      state.isVerifying = false;
+      state.isValidAccount = false;
+      state.verificationError = null;
     }
   },
   extraReducers: (builder) => {
@@ -136,11 +162,26 @@ export const userSlice = createSlice({
         state.isLogged = false;
         state.balanceValues = null;
         removeJWT();
+      })
+      // VERIFY ACCOUNT
+      .addCase(verifyAccount.pending, (state) => {
+        state.isVerifying = true;
+        state.isValidAccount = false;
+        state.verificationError = null;
+      })
+      .addCase(verifyAccount.fulfilled, (state) => {
+        state.isVerifying = false;
+        state.isValidAccount = true;
+      })
+      .addCase(verifyAccount.rejected, (state, action) => {
+        state.isVerifying = false;
+        state.isValidAccount = false;
+        state.verificationError = action.payload as string;
       });
   },
 });
 
-export const { logout, clearError } = userSlice.actions;
+export const { logout, clearError, resetVerification } = userSlice.actions;
 
 // Selectores
 export const selectIsLogged = (state: { user: UserState }) => state.user.isLogged;
@@ -149,5 +190,8 @@ export const selectUserLoading = (state: { user: UserState }) => state.user.load
 export const selectRegisterSuccess = (state: { user: UserState }) => state.user.registerSuccess;
 export const selectUserValue = (state: { user: UserState }) => state.user.value;
 export const selectBalanceValues = (state: { user: UserState }) => state.user.balanceValues;
+export const selectIsVerifying = (state: { user: UserState }) => state.user.isVerifying;
+export const selectIsValidAccount = (state: { user: UserState }) => state.user.isValidAccount;
+export const selectVerificationError = (state: { user: UserState }) => state.user.verificationError;
 
 export default userSlice.reducer;

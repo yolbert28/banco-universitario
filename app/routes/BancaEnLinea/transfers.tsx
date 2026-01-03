@@ -6,18 +6,25 @@ import { IconCheck, IconX } from "@tabler/icons-react";
 import InputField from "~/components/BancaEnLinea/InputField";
 import PrimaryButton from "~/components/PrimaryButton";
 import SecondaryButton from "~/components/SecondaryButton";
-import Message from "~/components/BancaEnLinea/Message";
 import LoadingSpinner from "~/components/BancaEnLinea/LoadingSpinner";
+import SuccessfulTransferModal from "~/components/BancaEnLinea/SuccessfulTransferModal";
 import {
   makeTransfer,
   resetTransferState,
   selectTransferError,
   selectTransferLoading,
   selectTransferSuccess,
+  selectTransferDetails,
 } from "~/redux/transfer/transferSlice";
+import {
+  verifyAccount,
+  resetVerification,
+  selectIsVerifying,
+  selectIsValidAccount,
+} from "~/redux/user/userSlice";
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
 import type { TransferValues } from "~/api/modules/Movements";
-import { verifyAccountAPI } from "~/api/modules/User";
+import Message from "~/components/BancaEnLinea/Message";
 
 export default function Transfers() {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,13 +38,16 @@ export default function Transfers() {
   
   // Estado para manejo de input de monto como string para mejor UX
   const [amountInput, setAmountInput] = useState("");
-  const [isValidAccount, setIsValidAccount] = useState(false);
-  const [isVerifying, setIsVerifying] = useState(false);
 
   // Selectores de Redux
   const loading = useSelector((state: rootState) => selectTransferLoading(state));
   const error = useSelector((state: rootState) => selectTransferError(state));
   const success = useSelector((state: rootState) => selectTransferSuccess(state));
+  const transferDetails = useSelector((state: rootState) => selectTransferDetails(state));
+  
+  // Selectores de Redux (User)
+  const isVerifying = useSelector((state: rootState) => selectIsVerifying(state));
+  const isValidAccount = useSelector((state: rootState) => selectIsValidAccount(state));
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
@@ -59,32 +69,17 @@ export default function Transfers() {
 
   // Efecto para verificar la cuenta cuando el usuario escribe
   useEffect(() => {
-    setIsValidAccount(false);
+    dispatch(resetVerification());
     if (!formData.account_number || formData.account_number.length !== 20) {
-      setIsVerifying(false);
       return;
     }
-    setIsVerifying(true);
 
-    const verifyAccount = async () => {
-      try {
-        const response = await verifyAccountAPI(formData.account_number);
-        if (response.data && (!response.errors || response.errors.length === 0)) {
-          setIsValidAccount(true);
-        } else {
-          setIsValidAccount(false);
-        }
-      } catch (error) {
-        setIsValidAccount(false);
-      } finally {
-        setIsVerifying(false);
-      }
-    };
-
-    const timeoutId = setTimeout(verifyAccount, 500); // Debounce de 500ms
+    const timeoutId = setTimeout(() => {
+      dispatch(verifyAccount(formData.account_number));
+    }, 500); // Debounce de 500ms
 
     return () => clearTimeout(timeoutId);
-  }, [formData.account_number]);
+  }, [formData.account_number, dispatch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -113,7 +108,7 @@ export default function Transfers() {
       description: "",
     });
     setAmountInput("");
-    setIsValidAccount(false);
+    dispatch(resetVerification());
   };
 
   const handleCloseModals = () => {
@@ -127,21 +122,19 @@ export default function Transfers() {
       {loading && <LoadingSpinner />}
 
       {/* Modal de Transferencia Exitosa */}
-      {showSuccessModal && (
-        <Message
-          title="Transferencia Exitosa"
-          message="La transferencia se ha realizado correctamente."
-          icon={<IconCheck size={48} className="text-accent" />}
-          onClick={handleCloseModals}
+      {showSuccessModal && transferDetails && (
+        <SuccessfulTransferModal
+          {...transferDetails}
+          onClose={handleCloseModals}
         />
       )}
 
       {/* Modal de Error */}
       {showErrorModal && (
         <Message
-          title="Error en la transacción"
+          title="Transacción incorrecta"
           message={error || "Ocurrió un error inesperado."}
-          icon={<IconX size={48} className="text-red-500" />}
+          icon={<IconX size={48} className="text-accent" />}
           onClick={handleCloseModals}
         />
       )}

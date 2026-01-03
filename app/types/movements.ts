@@ -14,8 +14,8 @@ export interface MovementDTO {
 export interface Movement {
   id: number;    
   acountNumber: string; 
-  amount: number;           
-  balance: number;     
+  amount: string;           
+  balance: string;     
   createAt: string;         
   description: string;          
   isExpense: boolean; 
