@@ -8,8 +8,14 @@ export interface Contact{
 }
 
 //Trae los contactos
-export const getContactsAPI = () =>
-    apiHttp ("GET", `/v1/client/contact`);
+export const getContactsAPI = (params?: { alias?: string; page?: number; page_size?: number }) => {
+    let query = "";
+    if (params) {
+        const searchParams = new URLSearchParams(params as any);
+        query = `?${searchParams.toString()}`;
+    }
+    return apiHttp("GET", `/v1/client/contact${query}`);
+};
 
 //Agregar un contacto
 export const createContactAPI = (contactData: Contact) =>
@@ -22,5 +28,3 @@ export const updateContactAPI = (id: string, contactData: Contact) =>
 //Elimina contacto
 export const deleteContactAPI = (id: string) =>
     apiHttp("DELETE", `/v1/client/contact/${id}`);
-
-

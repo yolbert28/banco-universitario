@@ -20,6 +20,7 @@ interface ContactModalProps {
   showError: boolean;
   errorMessage: string;
   isEditing: boolean;
+  showBg?: boolean;
 }
 
 export default function ContactModal({
@@ -31,11 +32,12 @@ export default function ContactModal({
   showError,
   errorMessage,
   isEditing,
+  showBg = true
 }: ContactModalProps) {
   if (!isOpen) return null;
 
   return (
-    <DarkInteractionLayout onClose={onClose}>
+    <DarkInteractionLayout onClose={onClose} showBg={showBg}>
       <div className="bg-primary z-60 items-center w-full max-w-[620px] rounded-2xl p-8  flex flex-col animate-in fade-in zoom-in duration-300">
         <h3 className="text-2xl font-bold text-accent mb-8 text-center ">
           {isEditing ? "Editar contacto" : "Guardar contacto"}

@@ -12,7 +12,6 @@ import "./app.css";
 import { Provider } from "react-redux";
 import { store } from "~/redux/reduxStore";
 
-
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Banco Universitario" },
@@ -34,6 +33,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <style>{`
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 10px;
+          }
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #004D4D;
+            border-radius: 20px;
+            border: 2px solid #E5FFFD;
+          }
+        `}</style>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -44,7 +56,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    
     // para redux
     <Provider store={store}>
       <Outlet />

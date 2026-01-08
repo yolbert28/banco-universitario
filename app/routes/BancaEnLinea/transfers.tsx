@@ -25,6 +25,8 @@ import {
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
 import type { TransferValues } from "~/api/modules/Movements";
 import Message from "~/components/BancaEnLinea/Message";
+import ContactListModal from "~/components/BancaEnLinea/ContactListModal";
+import type { Contact } from "~/components/BancaEnLinea/ContactModal";
 
 export default function Transfers() {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,6 +53,8 @@ export default function Transfers() {
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+  const [selectedContactAlias, setSelectedContactAlias] = useState("");
 
   // Efecto para manejar el éxito de la transacción
   useEffect(() => {
@@ -85,12 +89,24 @@ export default function Transfers() {
     const { name, value } = e.target;
     
     if (name === "amount") {
-      // Permitir solo números y un punto decimal
-      if (/^\d*\.?\d*$/.test(value)) {
-        setAmountInput(value);
-        setFormData(prev => ({ ...prev, amount: parseFloat(value) || 0 }));
+      // Eliminar todo lo que no sea dígito
+      const rawValue = value.replace(/\D/g, "");
+      
+      if (rawValue === "") {
+        setAmountInput("");
+        setFormData((prev) => ({ ...prev, amount: 0 }));
+        return;
       }
+
+      const numericValue = parseInt(rawValue, 10);
+      // Formatear visualmente (ej: 4564 -> 45,64)
+      const formattedDisplay = (numericValue / 100).toLocaleString("es-ES", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      setAmountInput(formattedDisplay);
+      // Guardar valor entero para backend (ej: 4564)
+      setFormData((prev) => ({ ...prev, amount: numericValue }));
     } else {
+      if (name === "account_number") setSelectedContactAlias("");
       setFormData(prev => ({ ...prev, [name]: value }));
     }
   };
@@ -108,6 +124,7 @@ export default function Transfers() {
       description: "",
     });
     setAmountInput("");
+    setSelectedContactAlias("");
     dispatch(resetVerification());
   };
 
@@ -115,6 +132,12 @@ export default function Transfers() {
     setShowSuccessModal(false);
     setShowErrorModal(false);
     dispatch(resetTransferState());
+  };
+
+  const handleSelectContact = (contact: Contact) => {
+    setFormData(prev => ({ ...prev, account_number: contact.account_number }));
+    setSelectedContactAlias(contact.alias);
+    setShowContactModal(false);
   };
 
   return (
@@ -138,9 +161,16 @@ export default function Transfers() {
           onClick={handleCloseModals}
         />
       )}
+
+      {showContactModal && (
+        <ContactListModal 
+          onClose={() => setShowContactModal(false)} 
+          onSelect={handleSelectContact}
+        />
+      )}
       
       <div className="flex justify-center items-center w-full h-full relative">
-        <div className="bg-primary w-[500px] h-auto px-8 py-6 flex flex-col rounded-2xl gap-3 shadow-xl">
+        <div className="bg-primary w-[500px] h-auto px-8 py-6 my-4 flex flex-col rounded-2xl gap-3 shadow-xl">
           <div className="flex flex-row gap-2.5 justify-center items-center w-full mb-4">
             <div className="w-full h-0.5 bg-accent rounded-full" />
             <h1 className="text-2xl font-bold text-accent">Transferencias</h1>
@@ -149,7 +179,9 @@ export default function Transfers() {
 
           
           <div className="flex flex-col gap-1 text-dirty-white">
-            <p className="text-dirty-white font-medium">Destinatario:</p>
+            <p className="text-dirty-white font-medium">
+              Destinatario: {selectedContactAlias && <span className="text-accent font-bold">{selectedContactAlias}</span>}
+            </p>
             <div className="flex flex-row justify-center items-center gap-1 text-dirty-white">
               <InputField
                 name="account_number"
@@ -159,7 +191,10 @@ export default function Transfers() {
                 onChange={handleChange}
                 required
               />
-              <button className="bg-accent hover:bg-dark-accent h-[50px] aspect-square rounded-xl flex justify-center items-center transition-colors">
+              <button 
+                className="bg-accent hover:bg-dark-accent h-[50px] aspect-square rounded-xl flex justify-center items-center transition-colors"
+                onClick={() => setShowContactModal(true)}
+              >
                 <img src="/images/contacts.svg" alt="Contactos" />
               </button>
             </div>

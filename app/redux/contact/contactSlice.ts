@@ -4,20 +4,22 @@ import type { rootState } from "../reduxStore";
 
 interface ContactState {
     contactsList: Contact [];
+    total: number;
     loading: boolean;
     errorMenssage: string;
 }
 
 const initialState: ContactState = {
     contactsList:[],
+    total: 0,
     loading:false,
     errorMenssage:"",
 };
 
 export const fetchContacts = createAsyncThunk(
     'contact/fetchAll',
-    async (_, { rejectWithValue }) =>{
-        const response = await getContactsAPI ();
+    async (params: { alias?: string; page?: number; page_size?: number } | undefined, { rejectWithValue }) =>{
+        const response = await getContactsAPI (params);
         if (response.errors && response.errors.length > 0){
             return rejectWithValue(response.errors[0].error);
         }
@@ -27,7 +29,7 @@ export const fetchContacts = createAsyncThunk(
 
 export const addContact = createAsyncThunk(
     'contact/create',
-    async (newContact: Contact, { dispatch, rejectWithValue }) => {
+    async (newContact: Contact, { rejectWithValue }) => {
         try {
             const response = await createContactAPI(newContact);
        
@@ -35,7 +37,6 @@ export const addContact = createAsyncThunk(
                 return rejectWithValue(response.errors[0].error);
             }
 
-            dispatch(fetchContacts());
             return response.data;
         } catch (error: any) {
             
@@ -46,26 +47,24 @@ export const addContact = createAsyncThunk(
 )
 export const updateContact = createAsyncThunk(
     'contact/update',
-    async ({ id, contact }: { id: string; contact: Contact }, { dispatch, rejectWithValue }) => {
+    async ({ id, contact }: { id: string; contact: Contact }, { rejectWithValue }) => {
             const response = await updateContactAPI(id, contact);
             
             if (response.errors && response.errors.length > 0) {
                 return rejectWithValue(response.errors[0].error);
             }
 
-            dispatch(fetchContacts());
             return response.data;
         }
 );
 
 export const deleteContact = createAsyncThunk(
     'contact/delete',
-    async (id: string, { dispatch, rejectWithValue }) =>{
+    async (id: string, { rejectWithValue }) =>{
         const response = await deleteContactAPI(id);
         if (response.errors && response.errors.length>0){
             return rejectWithValue(response.errors[0].error);
         }
-        dispatch(fetchContacts());
         return id;
     }
 );
@@ -84,6 +83,7 @@ const contactSlice = createSlice({
             .addCase (fetchContacts.fulfilled, (state, action: PayloadAction<any>) => {
             state.loading = false;
             state.contactsList = Array.isArray(action.payload) ? action.payload : action.payload.data || [];
+            state.total = action.payload.total || (Array.isArray(action.payload) ? action.payload.length : action.payload.data?.length || 0);
             })
             .addCase(updateContact.pending, (state) =>{
                 state.loading = true;
@@ -116,6 +116,7 @@ const contactSlice = createSlice({
 
 export const {clearContactError} = contactSlice.actions;
 export const selecContacts = (state: {contact: ContactState}) => state.contact.contactsList;
+export const selectContactTotal = (state: {contact: ContactState}) => state.contact.total;
 export const selecContactLoading = (state: {contact: ContactState}) => state.contact.loading;
 
 export default contactSlice.reducer;

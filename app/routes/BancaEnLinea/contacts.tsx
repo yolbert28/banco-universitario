@@ -7,11 +7,11 @@ import {
   deleteContact,
   selecContacts,
   selecContactLoading,
+  selectContactTotal,
 } from "~/redux/contact/contactSlice";
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
 import { IconSearch, IconCheck } from "@tabler/icons-react";
 
-import LoadingSpinner from "~/components/BancaEnLinea/LoadingSpinner";
 import Pagination from "~/components/BancaEnLinea/PaginationContact";
 import ContactTable from "~/components/BancaEnLinea/ContactTable";
 import ContactModal from "~/components/BancaEnLinea/ContactModal";
@@ -28,6 +28,7 @@ const Contacts: React.FC = () => {
   const contactsData = useSelector((state: rootState) => selecContacts(state));
   const contacts = Array.isArray(contactsData) ? contactsData : [];
   const loading = useSelector((state: rootState) => selecContactLoading(state));
+  const totalContacts = useSelector((state: rootState) => selectContactTotal(state));
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,8 +52,12 @@ const Contacts: React.FC = () => {
   });
 
   useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
+    dispatch(fetchContacts({
+      alias: searchTerm,
+      page: currentPage,
+      page_size: contactsPerPage
+    }));
+  }, [dispatch, currentPage, searchTerm]);
 
   useEffect(() => {
     if (showError) {
@@ -64,19 +69,8 @@ const Contacts: React.FC = () => {
     }
   }, [showError]);
 
-  const filteredContacts = contacts.filter((contact) =>
-    contact.alias.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const indexOfLastContact = currentPage * contactsPerPage;
-  const indexOfFirstContact = indexOfLastContact - contactsPerPage;
-  const currentContactsList = filteredContacts.slice(
-    indexOfFirstContact,
-    indexOfLastContact
-  );
-
   const paginateNext = () => {
-    if (currentPage < Math.ceil(filteredContacts.length / contactsPerPage)) {
+    if (currentPage * contactsPerPage < totalContacts) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -104,6 +98,11 @@ const Contacts: React.FC = () => {
         setShowConfirmDelete(false);
         setShowDeleteSuccess(true);
         setContactToDelete(null);
+        dispatch(fetchContacts({
+          alias: searchTerm,
+          page: currentPage,
+          page_size: contactsPerPage
+        }));
       }
     }
   };
@@ -130,6 +129,11 @@ const Contacts: React.FC = () => {
       setShowError(false);
       setViewMode('list'); 
       setCurrentContact({ alias: "", account_number: "", description: "" });
+      dispatch(fetchContacts({
+        alias: searchTerm,
+        page: currentPage,
+        page_size: contactsPerPage
+      }));
     } else if (result && result.payload) {
       setErrorMessage(result.payload as string);
       setShowError(true);
@@ -143,8 +147,6 @@ const Contacts: React.FC = () => {
     setShowAddModal(false);
     setShowError(false);
   };
-
-  if (loading && contacts.length === 0) return <LoadingSpinner />;
 
   return (
     <>
@@ -214,40 +216,34 @@ const Contacts: React.FC = () => {
                     setCurrentPage(1);
                   }}
                 />
-                <button className="bg-accent text-primary hover:bg-dark-accent h-[50px] aspect-square rounded flex justify-center items-center">
-                  <IconSearch size={30} stroke={2} />
-                </button>
               </div>
             </div>
 
-            <div className="w-full max-w-[549px]  mx-auto">
-              {loading ? (
-                <LoadingSpinner />
-              ) : filteredContacts.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-64 bg-white/50 rounded-3xl border-2 border-dashed border-primary/20 mx-auto max-w-[549px] mt-10">
+            <div className="w-full max-w-[549px] mx-auto h-[452px]">
+              {contacts.length === 0 && !loading ? (
+                <div className="flex flex-col items-center justify-center h-full bg-white/50 rounded-3xl border-2 border-dashed border-primary/20 mx-auto max-w-[549px]">
                   <p className="text-primary text-xl font-medium italic">
                     No se poseen contactos registrados
                   </p>
                 </div>
               ) : (
-                <>
-                <div className="w-full max-w-[549px] bg-white mx-auto  ">
+                <div className="w-full max-w-[549px] bg-white mx-auto h-full flex flex-col justify-between">
                   <ContactTable
-                    contacts={currentContactsList}
+                    contacts={contacts}
                     onEdit={handleOpenDetail}
                     onDelete={handleOpenConfirm}
+                    loading={loading}
                   />
                   <div className="w-full bg-white">
                     <Pagination
                       nextPage={paginateNext}
                       prevPage={paginatePrev}
-                      fromQuantity={filteredContacts.length === 0 ? 0 : indexOfFirstContact + 1}
-                      toQuantity={Math.min(indexOfLastContact, filteredContacts.length)}
-                      quantity={filteredContacts.length}
+                      fromQuantity={totalContacts === 0 ? 0 : (currentPage - 1) * contactsPerPage + 1}
+                      toQuantity={Math.min(currentPage * contactsPerPage, totalContacts)}
+                      quantity={totalContacts}
                     />
                   </div>
-                  </div>
-                </>
+                </div>
               )}
             </div>
 

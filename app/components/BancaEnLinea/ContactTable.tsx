@@ -11,9 +11,10 @@ interface ContactTableProps {
   contacts: Contact[];
   onEdit: (contact: Contact) => void;
   onDelete: (contact: Contact) => void;
+  loading?: boolean;
 }
 
-export default function ContactTable({ contacts, onEdit, onDelete }: ContactTableProps) {
+export default function ContactTable({ contacts, onEdit, onDelete, loading }: ContactTableProps) {
   return (
     <div className="flex-1 overflow-hidden">
       <table className="w-full max-w-[549px] mx-auto ">
@@ -26,7 +27,16 @@ export default function ContactTable({ contacts, onEdit, onDelete }: ContactTabl
           </tr>
         </thead>
         <tbody className="divide-y divide-primary mx-auto">
-          {contacts.map((contact) => (
+          {loading ? (
+            <tr>
+              <td colSpan={2} className="py-32">
+                <div className="flex justify-center items-center w-full">
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary/20 border-t-accent"></div>
+                </div>
+              </td>
+            </tr>
+          ) : (
+            contacts.map((contact) => (
             <tr key={contact.id} className=" mx-auto border-b-2 border-primary bg-white transition-colors group">
               <td className="py-3 px-12 text-black  text-[16px]  tracking-tight  ">
                 {contact.alias}
@@ -47,7 +57,7 @@ export default function ContactTable({ contacts, onEdit, onDelete }: ContactTabl
                 </div>
               </td>
             </tr>
-          ))}
+          )))}
         </tbody>
       </table>
     </div>
