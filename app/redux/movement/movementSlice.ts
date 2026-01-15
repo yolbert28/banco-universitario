@@ -45,8 +45,8 @@ export const transfer = createAsyncThunk(
 // --- WHO AM I THUNK ---
 export const movements = createAsyncThunk(
   'user/movement',
-  async (_:any, { rejectWithValue }: {rejectWithValue: any}) => {
-    const response = await getMovementsAPI();
+  async ({ page, multiplier }: { page: number; multiplier: string }, { rejectWithValue }: {rejectWithValue: any}) => {
+    const response = await getMovementsAPI(page, multiplier);
     if (response.errors && response.errors.length > 0) {
       return rejectWithValue(response.errors[0].error);
     }

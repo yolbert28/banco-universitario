@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getPage,
-  initPage,
-  nextPage,
-  prevPage,
-  setMultiplier,
-} from "~/api/LocalStorage";
 import MovementTable from "~/components/BancaEnLinea/MovementTable";
 import Pagination from "~/components/BancaEnLinea/Pagination";
 import {
@@ -16,17 +9,18 @@ import {
   selectRecentsMovements,
 } from "~/redux/movement/movementSlice";
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
-import { meta } from "~/root";
 
 export default function Movements() {
   const dispatch = useDispatch<AppDispatch>();
-  const [currentPage, setCurrentPage] = useState(getPage());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [multiplier, setMultiplier] = useState("0");
+  const ITEMS_PER_PAGE = 30;
 
   const loading = useSelector((state: rootState) =>
     selectMovementLoading(state)
   );
 
-  const pageSize = useSelector((state: rootState) =>
+  const totalMovements = useSelector((state: rootState) =>
     selectMovementQuantity(state)
   );
 
@@ -36,46 +30,25 @@ export default function Movements() {
 
   const currentCount = recentsMovements?.length || 0;
 
-  const calculatedFrom = currentCount === 0 ? 0 : (currentPage - 1) * 30 + 1;
+  const fromRecord = currentCount === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
 
-  const calculatedTo =
-    currentCount === 0 ? 0 : calculatedFrom + currentCount - 1;
+  const toRecord = currentCount === 0 ? 0 : fromRecord + currentCount - 1;
 
   useEffect(() => {
-    initPage();
-    setMultiplier("0");
-    dispatch(movements());
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      initPage();
-      setMultiplier("0");
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      initPage();
-      setMultiplier("0");
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
+    dispatch(movements({ page: currentPage, multiplier }));
+  }, [dispatch, currentPage, multiplier]);
 
   // 4. HANDLERS
   const handlerNextPage = () => {
-    // Evitar doble click o avanzar si está cargando
-    if (loading) return;
-
-    nextPage(); // Actualiza LocalStorage
-    setCurrentPage(getPage()); // Actualiza estado React para recalcular 'calculatedFrom'
-    dispatch(movements()); // Pide nuevos datos
+    setCurrentPage((prev) => prev + 1);
   };
 
   const handlerPrevPage = () => {
-    if (loading || currentPage === 1) return;
-
-    prevPage();
-    setCurrentPage(getPage());
-    dispatch(movements());
+    if (currentPage === 1) return;
+    setCurrentPage((prev) => prev - 1);
   };
+
+  console.log(totalMovements)
 
   return (
     <div className="flex flex-col w-full px-8 py-8 box-border">
@@ -87,11 +60,10 @@ export default function Movements() {
             name=""
             id=""
             className="bg-primary text-dirty-white w-32 rounded-sm px-1"
+            value={multiplier}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
               setMultiplier(e.target.value);
-              initPage();
-              setCurrentPage(getPage());
-              dispatch(movements());
+              setCurrentPage(1);
             }}
           >
             <option value="0">Todos</option>
@@ -104,9 +76,9 @@ export default function Movements() {
       <Pagination
         prevPage={handlerPrevPage}
         nextPage={handlerNextPage}
-        fromQuantity={calculatedFrom}
-        toQuantity={calculatedTo}
-        quantity={pageSize}
+        fromQuantity={fromRecord}
+        toQuantity={toRecord}
+        quantity={totalMovements}
       />
     </div>
   );

@@ -53,6 +53,7 @@ export default function Transfers() {
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showErrorTransfer, setShowErrorTransfer] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [selectedContactAlias, setSelectedContactAlias] = useState("");
 
@@ -114,6 +115,8 @@ export default function Transfers() {
   const handleSubmit = () => {
     if (formData.account_number && formData.amount > 0 && formData.description && isValidAccount) {
       dispatch(makeTransfer(formData));
+    } else {
+      setShowErrorTransfer(true)
     }
   };
 
@@ -131,6 +134,7 @@ export default function Transfers() {
   const handleCloseModals = () => {
     setShowSuccessModal(false);
     setShowErrorModal(false);
+    setShowErrorTransfer(false)
     dispatch(resetTransferState());
   };
 
@@ -157,6 +161,15 @@ export default function Transfers() {
         <Message
           title="Transacción incorrecta"
           message={error || "Ocurrió un error inesperado."}
+          icon={<IconX size={48} className="text-accent" />}
+          onClick={handleCloseModals}
+        />
+      )}
+
+      {showErrorTransfer && (
+        <Message
+          title="Transacción incorrecta"
+          message={"Debe indicar una descripción y monto apropiado"}
           icon={<IconX size={48} className="text-accent" />}
           onClick={handleCloseModals}
         />
@@ -215,11 +228,9 @@ export default function Transfers() {
               placeholder="Motivo de la transferencia"
               value={formData.description}
               onChange={handleChange}
-              required
               lineNumber={3}
             />
           </div>
-
 
           <div className="flex flex-col gap-1 text-dirty-white">
             <p className="text-dirty-white font-medium">Monto:</p>
@@ -236,12 +247,10 @@ export default function Transfers() {
           <div className="h-4" />
           
           <div className="flex flex-row gap-4 items-center justify-center mt-2">
-
             <PrimaryButton
               text="Realizar transferencia"
               textLarge={false}
               maxWidth={true}
-
               onClick={handleSubmit}
               disabled={!isValidAccount || loading}
             />

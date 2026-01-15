@@ -23,6 +23,11 @@ export default function SuccessfulTransferModal({
     year: "numeric",
   });
 
+  const currencyFormatter = new Intl.NumberFormat("de-DE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
   return (
     <DarkInteractionLayout onClose={onClose}>
       <div className="flex flex-col gap-6 bg-primary py-8 px-12 rounded-xl w-[550px] justify-center">
@@ -39,7 +44,7 @@ export default function SuccessfulTransferModal({
           <strong>Descripción:</strong> {description}
         </div>
         <div className="text-accent text-lg">
-          <strong>Monto: {amount}</strong>
+          <strong>Monto: {(currencyFormatter.format(amount/100))}</strong>
         </div>
         <div className="w-full flex justify-center">
           <PrimaryButton

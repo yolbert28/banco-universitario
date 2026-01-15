@@ -52,7 +52,7 @@ export default function LayoutBancaEnLinea({
   }, []);
 
   return (
-    <main className="w-screen flex justify-center items-center bg-dirty-white">
+    <main className="w-screen max-w-screen flex justify-center items-center bg-dirty-white overflow-clip">
       <section
         className="grid w-screen max-w-7xl xl:max-w-[1650px]"
         style={{ gridTemplateColumns: "auto 1fr" }}

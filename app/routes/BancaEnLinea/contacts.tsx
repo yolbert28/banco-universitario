@@ -254,7 +254,7 @@ const Contacts: React.FC = () => {
                   setCurrentContact({ alias: "", account_number: "", description: "" });
                   setShowAddModal(true);
                 }}
-                className="max-w-[418px] mx-auto bg-accent text-primary px-[56px] py-4 rounded font-bold hover:scale-101"
+                className="max-w-[418px] mx-auto bg-accent text-primary px-14 py-4 rounded font-bold hover:scale-101"
               >
                 Añadir Contacto Nuevo
               </button>

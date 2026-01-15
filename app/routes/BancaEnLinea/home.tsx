@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { initPage, setMultiplier } from "~/api/LocalStorage";
 import LoadingSpinner from "~/components/BancaEnLinea/LoadingSpinner";
 import MovementTable from "~/components/BancaEnLinea/MovementTable";
 import { ROUTES } from "~/constans";
@@ -43,11 +42,9 @@ const currencyFormatter = new Intl.NumberFormat("de-DE", {
 });
 
   useEffect(() => {
-    initPage();
-    setMultiplier("0");
     dispatch(whoAmI());
     dispatch(balance());
-    dispatch(movements());
+    dispatch(movements({ page: 1, multiplier: "0" }));
   }, [reload]);
 
   const handlerClickShowAccountNumber = () => {

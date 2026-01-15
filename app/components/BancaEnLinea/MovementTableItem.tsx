@@ -13,7 +13,7 @@ export default function MovementTableItem({
         <p className="text-[12px]">{movement.date}</p>
         <p className="text-[12px]">{movement.time}</p>
       </td>
-      <td className="px-4  py-2">{movement.description}</td>
+      <td className="px-4 py-2">{movement.description}</td>
       <td className="text-center px-4">(********5678)</td>
       <td className={`text-center px-4 ${amountColor}`}>
         <strong>Bs. {movement.amount}</strong>
