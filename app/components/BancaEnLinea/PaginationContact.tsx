@@ -7,10 +7,10 @@ interface PaginationProps {
 }
 
 export default function Pagination({nextPage, prevPage, fromQuantity, toQuantity, quantity}: PaginationProps) {
-  const leftBackground = (fromQuantity === 1) ? "bg-disable-grey" : "bg-accent"
-  const rightBackground = (toQuantity >= quantity) ? "bg-disable-grey" : "bg-accent"
-  const leftImage = (fromQuantity === 1) ? "/images/left_arrow_grey.png" : "/images/left_arrow_green.png"
-  const rightImage = (toQuantity >= quantity) ? "/images/left_arrow_grey.png" : "/images/left_arrow_green.png"
+  const leftBackground = (fromQuantity <= 1) ? "bg-disable-grey" : "bg-accent"
+  const rightBackground = (quantity < 5) ? "bg-disable-grey" : "bg-accent"
+  const leftImage = (fromQuantity <= 1) ? "/images/left_arrow_grey.png" : "/images/left_arrow_green.png"
+  const rightImage = (quantity < 5) ? "/images/left_arrow_grey.png" : "/images/left_arrow_green.png"
 
   return (
     <div className="flex justify-end mt-2 pb-2 mx-4">
@@ -22,8 +22,8 @@ export default function Pagination({nextPage, prevPage, fromQuantity, toQuantity
         </button>
         <div className=" mx-auto text-primary font-bold text-xl">{fromQuantity} - {toQuantity}</div>
         <button className={`h-8 w-8 ${rightBackground} mx-auto p-1 rounded-md`}
-        disabled = {toQuantity >= quantity}
-        onClick={nextPage}>
+        disabled = {quantity < 5}
+        onClick={()=>{nextPage(); console.log("next")}}>
           <img
             className="rotate-180"
             src={rightImage}

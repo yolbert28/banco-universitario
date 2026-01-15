@@ -7,7 +7,6 @@ import {
   deleteContact,
   selecContacts,
   selecContactLoading,
-  selectContactTotal,
 } from "~/redux/contact/contactSlice";
 import type { AppDispatch, rootState } from "~/redux/reduxStore";
 import { IconSearch, IconCheck } from "@tabler/icons-react";
@@ -28,7 +27,6 @@ const Contacts: React.FC = () => {
   const contactsData = useSelector((state: rootState) => selecContacts(state));
   const contacts = Array.isArray(contactsData) ? contactsData : [];
   const loading = useSelector((state: rootState) => selecContactLoading(state));
-  const totalContacts = useSelector((state: rootState) => selectContactTotal(state));
 
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,7 +68,7 @@ const Contacts: React.FC = () => {
   }, [showError]);
 
   const paginateNext = () => {
-    if (currentPage * contactsPerPage < totalContacts) {
+    if (contacts.length >= contactsPerPage) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -98,8 +96,7 @@ const Contacts: React.FC = () => {
         setShowConfirmDelete(false);
         setShowDeleteSuccess(true);
         setContactToDelete(null);
-        dispatch(fetchContacts({
-          alias: searchTerm,
+        dispatch(fetchContacts({alias: searchTerm,
           page: currentPage,
           page_size: contactsPerPage
         }));
@@ -238,9 +235,9 @@ const Contacts: React.FC = () => {
                     <Pagination
                       nextPage={paginateNext}
                       prevPage={paginatePrev}
-                      fromQuantity={totalContacts === 0 ? 0 : (currentPage - 1) * contactsPerPage + 1}
-                      toQuantity={Math.min(currentPage * contactsPerPage, totalContacts)}
-                      quantity={totalContacts}
+                      fromQuantity={contacts.length === 0 ? 0 : (currentPage - 1) * contactsPerPage + 1}
+                      toQuantity={(currentPage - 1) * contactsPerPage + contacts.length}
+                      quantity={contacts.length}
                     />
                   </div>
                 </div>
